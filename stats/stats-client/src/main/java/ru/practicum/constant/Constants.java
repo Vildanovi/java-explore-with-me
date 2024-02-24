@@ -1,4 +1,4 @@
-package constant;
+package ru.practicum.constant;
 
 import lombok.NoArgsConstructor;
 
