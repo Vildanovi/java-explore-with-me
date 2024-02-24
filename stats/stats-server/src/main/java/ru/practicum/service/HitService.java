@@ -17,6 +17,7 @@ public class HitService {
 
     private final HitRepository hitRepository;
 
+    @Transactional
     public Hit createHit(EndPointHitDto endPointHitDto) {
         return hitRepository.save(HitMapper.mapEndPointHitDtoToHit(endPointHitDto));
 
