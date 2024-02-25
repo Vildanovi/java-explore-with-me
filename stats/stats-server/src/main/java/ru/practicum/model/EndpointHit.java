@@ -14,12 +14,11 @@ import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Hit {
+public class EndpointHit {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Column(name = "app_name")
     private String app;
     private String uri;
     private String ip;
@@ -32,8 +31,8 @@ public class Hit {
         Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
         Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
         if (thisEffectiveClass != oEffectiveClass) return false;
-        Hit hit = (Hit) o;
-        return getId() != null && Objects.equals(getId(), hit.getId());
+        EndpointHit endpointHit = (EndpointHit) o;
+        return getId() != null && Objects.equals(getId(), endpointHit.getId());
     }
 
     @Override

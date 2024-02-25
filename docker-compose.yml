@@ -16,7 +16,7 @@ services:
       - POSTGRES_PASSWORD=test
 
   stats-db:
-    image: postgres:14-alpine
+    image: postgres:13.7-alpine
     container_name: postgres-stats-db
     volumes:
       - /var/lib/postgresql/stats-db

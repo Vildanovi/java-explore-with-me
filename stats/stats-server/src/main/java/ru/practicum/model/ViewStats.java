@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Stats {
+public class ViewStats {
     private String app;
     private String uri;
-    private Integer hits;
+    private Long hits;
 }
