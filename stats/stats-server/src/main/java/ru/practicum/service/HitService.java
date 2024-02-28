@@ -31,9 +31,7 @@ public class HitService {
         return hitRepository.findAll();
     }
 
-    public List<ViewStats> getStats(String start, String end, List<String> uris, Boolean isUnique) {
-        LocalDateTime startDate = LocalDateTime.parse(start, Constants.DATE_PATTERN);
-        LocalDateTime endDate = LocalDateTime.parse(end, Constants.DATE_PATTERN);
+    public List<ViewStats> getStats(LocalDateTime startDate, LocalDateTime endDate, List<String> uris, Boolean isUnique) {
         List<ViewStats> stats;
         if (uris != null) {
             if (!isUnique) {

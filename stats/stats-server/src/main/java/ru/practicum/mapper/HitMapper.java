@@ -3,11 +3,8 @@ package ru.practicum.mapper;
 import lombok.experimental.UtilityClass;
 import ru.practicum.EndPointHitDto;
 import ru.practicum.ViewStatsDto;
-import ru.practicum.constant.Constants;
 import ru.practicum.model.EndpointHit;
 import ru.practicum.model.ViewStats;
-
-import java.time.LocalDateTime;
 
 @UtilityClass
 public class HitMapper {
@@ -18,7 +15,7 @@ public class HitMapper {
                 .app(endPointHitDto.getApp())
                 .uri(endPointHitDto.getUri())
                 .ip(endPointHitDto.getIp())
-                .timestamp(LocalDateTime.parse(endPointHitDto.getTimestamp(), Constants.DATE_PATTERN))
+                .timestamp(endPointHitDto.getTimestamp())
                 .build();
     }
 
@@ -28,8 +25,7 @@ public class HitMapper {
                 .app(endpointHit.getApp())
                 .uri(endpointHit.getUri())
                 .ip(endpointHit.getIp())
-                .timestamp(Constants.DATE_PATTERN
-                        .format(endpointHit.getTimestamp()))
+                .timestamp(endpointHit.getTimestamp())
                 .build();
     }
 

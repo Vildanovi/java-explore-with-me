@@ -4,7 +4,6 @@ import org.springframework.http.*;
 import org.springframework.lang.Nullable;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
-import ru.practicum.constant.Constants;
 
 import java.util.List;
 import java.util.Map;
@@ -26,6 +25,10 @@ public class BaseClient {
 
     protected ResponseEntity<Object> get(String path, Integer userId, @Nullable Map<String, Object> parameters) {
         return makeAndSendRequest(HttpMethod.GET, path, userId, parameters, null);
+    }
+
+    protected ResponseEntity<Object> get(String path, @Nullable Map<String, Object> parameters) {
+        return makeAndSendRequest(HttpMethod.GET, path, null, parameters, null);
     }
 
     protected <T> ResponseEntity<Object> post(String path, T body) {
@@ -96,9 +99,6 @@ public class BaseClient {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setAccept(List.of(MediaType.APPLICATION_JSON));
-        if (userId != null) {
-            headers.set(Constants.USER_ID, String.valueOf(userId));
-        }
         return headers;
     }
 

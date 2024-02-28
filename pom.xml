@@ -23,6 +23,7 @@
 	<properties>
 		<java.version>11</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<mapstruct.version>1.5.5.Final</mapstruct.version>
 	</properties>
 
 
@@ -37,12 +38,12 @@
 			<dependency>
 				<groupId>org.mapstruct</groupId>
 				<artifactId>mapstruct</artifactId>
-				<version>1.5.5.Final</version>
+				<version>${mapstruct.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.mapstruct</groupId>
 				<artifactId>mapstruct-processor</artifactId>
-				<version>1.5.5.Final</version>
+				<version>${mapstruct.version}</version>
 			</dependency>
 
 			<dependency>

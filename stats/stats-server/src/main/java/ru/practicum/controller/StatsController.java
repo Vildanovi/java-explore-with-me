@@ -3,23 +3,22 @@ package ru.practicum.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.EndPointHitDto;
 import ru.practicum.ViewStatsDto;
 import ru.practicum.mapper.HitMapper;
-import ru.practicum.model.EndpointHit;
 import ru.practicum.service.HitService;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@Validated
 public class StatsController {
 
     private final HitService hitService;
@@ -34,8 +33,8 @@ public class StatsController {
 
     @GetMapping("/stats")
     @Operation(summary = "Получение статистики по посещениям.")
-    public List<ViewStatsDto> getStats(@RequestParam(name = "start")  String start,
-                                       @RequestParam(name = "end")  String end,
+    public List<ViewStatsDto> getStats(@RequestParam(name = "start") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime start,
+                                       @RequestParam(name = "end")  @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime end,
                                        @RequestParam(name = "uris", required = false) List<String> uris,
                                        @RequestParam(name = "unique", defaultValue = "false") Boolean unique) {
         log.debug("Получаем статистику для uris: {} start: {} end: {} unique: {}", uris, start, end, unique);
@@ -43,10 +42,5 @@ public class StatsController {
                 .stream()
                 .map(HitMapper::mapStatsToViewStatsDto)
                 .collect(Collectors.toList());
-    }
-
-    @GetMapping("/all")
-    public List<EndpointHit> getHits() {
-        return hitService.getHits();
     }
 }
