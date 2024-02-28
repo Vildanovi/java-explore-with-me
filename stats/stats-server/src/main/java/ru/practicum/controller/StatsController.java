@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.EndPointHitDto;
 import ru.practicum.ViewStatsDto;
+import ru.practicum.constant.Constants;
 import ru.practicum.mapper.HitMapper;
 import ru.practicum.service.HitService;
 
@@ -33,8 +34,8 @@ public class StatsController {
 
     @GetMapping("/stats")
     @Operation(summary = "Получение статистики по посещениям.")
-    public List<ViewStatsDto> getStats(@RequestParam(name = "start") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime start,
-                                       @RequestParam(name = "end")  @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime end,
+    public List<ViewStatsDto> getStats(@RequestParam(name = "start") @DateTimeFormat(pattern = Constants.DATE_PATTERN) LocalDateTime start,
+                                       @RequestParam(name = "end")  @DateTimeFormat(pattern = Constants.DATE_PATTERN) LocalDateTime end,
                                        @RequestParam(name = "uris", required = false) List<String> uris,
                                        @RequestParam(name = "unique", defaultValue = "false") Boolean unique) {
         log.debug("Получаем статистику для uris: {} start: {} end: {} unique: {}", uris, start, end, unique);
