@@ -1,18 +1,25 @@
 package ru.practicum.mapper;
 
 import lombok.experimental.UtilityClass;
-import ru.practicum.dto.compilations.CompilationDto;
-import ru.practicum.dto.compilations.CompilationsResponseDto;
+import ru.practicum.dto.user.NewUserRequest;
 import ru.practicum.dto.user.UserDto;
+import ru.practicum.model.Users;
 
 @UtilityClass
 public class UserMapper {
 
-//    public UserDto mapCompilationsDtoToCompilationsResponseDto(CompilationDto compilationDto) {
-//        return CompilationsResponseDto.builder()
-//                .id(compilationDto.getId())
-//                .title(compilationDto.getTitle())
-//                .events(compilationDto.getEvents())
-//                .build();
-//    }
+    public UserDto mapUsersToUserDto(Users users) {
+        return UserDto.builder()
+                .id(users.getId())
+                .email(users.getEmail())
+                .name(users.getName())
+                .build();
+    }
+
+    public Users mapnewUserRequestToUsers(NewUserRequest newUserRequest) {
+        return Users.builder()
+                .email(newUserRequest.getEmail())
+                .name(newUserRequest.getName())
+                .build();
+    }
 }

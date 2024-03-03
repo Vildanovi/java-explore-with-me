@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.dto.user.NewUserRequest;
 import ru.practicum.dto.user.UserDto;
+import ru.practicum.mapper.UserMapper;
+import ru.practicum.model.Users;
 import ru.practicum.service.UsersService;
 
 import javax.validation.Valid;
@@ -28,7 +30,8 @@ public class UsersAdminController {
     @ResponseStatus(code = HttpStatus.CREATED)
     @Operation(summary = "Добавление нового пользователя")
     public UserDto createUser(@RequestBody @Valid NewUserRequest newUserRequest) {
-        return usersService.createUser(newUserRequest);
+        Users user = UserMapper.mapnewUserRequestToUsers(newUserRequest);
+        return UserMapper.mapUsersToUserDto(usersService.createUser(user));
     }
 
     @GetMapping("/users")

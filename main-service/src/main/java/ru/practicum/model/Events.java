@@ -1,6 +1,5 @@
 package ru.practicum.model;
 
-import io.swagger.v3.oas.models.security.SecurityScheme;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import ru.practicum.model.enumerations.EventState;

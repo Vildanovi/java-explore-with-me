@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.dto.event.EventFullDto;
 import ru.practicum.dto.event.EventShortDto;
 import ru.practicum.service.EventsService;
-import ru.practicum.EndPointHitDto;
+import ru.practicum.dto.EndPointHitDto;
 import ru.practicum.client.StatClient;
 
 import javax.servlet.http.HttpServletRequest;

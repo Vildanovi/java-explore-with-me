@@ -20,7 +20,7 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 @RequestMapping(path = "/admin")
-@Tag(name="Admin: События", description="API для работы с событиями")
+@Tag(name = "Admin: События", description = "API для работы с событиями")
 public class EventsAdminController {
 
     private final EventsService eventsService;
