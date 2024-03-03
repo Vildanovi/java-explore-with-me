@@ -17,7 +17,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EndPointHitDto {
-
     @Schema(description = "Идентификатор записи",
             example = "1")
     private int id;

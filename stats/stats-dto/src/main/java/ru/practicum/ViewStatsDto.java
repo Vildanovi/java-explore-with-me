@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ViewStatsDto {
-
     @Schema(description = "Название сервиса",
             example = "ewm-main-service")
     private String app;
