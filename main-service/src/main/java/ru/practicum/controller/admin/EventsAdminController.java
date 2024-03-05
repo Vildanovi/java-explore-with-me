@@ -1,9 +1,10 @@
-package ru.practicum.controller.adminapi;
+package ru.practicum.controller.admin;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.dto.event.EventFullDto;
 import ru.practicum.dto.event.UpdateEventUserRequest;
@@ -19,13 +20,13 @@ import java.util.List;
 @Slf4j
 @RestController
 @AllArgsConstructor
-@RequestMapping(path = "/admin")
+@RequestMapping(path = "/admin/events", produces = MediaType.APPLICATION_JSON_VALUE)
 @Tag(name = "Admin: События", description = "API для работы с событиями")
 public class EventsAdminController {
 
     private final EventsService eventsService;
 
-    @GetMapping("/events")
+    @GetMapping
     @Operation(
             summary = "Поиск событий",
             description = "Эндпоинт возвращает полную информацию обо всех событиях подходящих " +
@@ -41,7 +42,7 @@ public class EventsAdminController {
         return eventsService.getEvents(users, states, categories, start, end, from, size);
     }
 
-    @PatchMapping("/events/{eventId}")
+    @PatchMapping("/{eventId}")
     @Operation(
             summary = "Редактирование данных события и его статуса (отклонение/публикация).",
             description = "Редактирование данных любого события администратором. Валидация данных не требуется.\n" +

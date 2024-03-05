@@ -14,13 +14,13 @@ import java.time.LocalDateTime;
 @Setter
 @Entity
 @Table(name = "requests")
-public class Requests {
+public class ParticipationRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event")
-    private Events event;
+    private Event event;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "requester")
     private Users requester;

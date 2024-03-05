@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import ru.practicum.dto.request.ParticipationRequestDto;
-import ru.practicum.repository.RequestsRepository;
+import ru.practicum.repository.ParticipationRequestRepository;
 
 import javax.validation.constraints.Positive;
 import java.util.List;
@@ -13,7 +13,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RequestsService {
 
-    private final RequestsRepository requestsRepository;
+    private final ParticipationRequestRepository participationRequestRepository;
 
     public List<ParticipationRequestDto> getRequestsByUser(@PathVariable @Positive Integer userId) {
         return null;

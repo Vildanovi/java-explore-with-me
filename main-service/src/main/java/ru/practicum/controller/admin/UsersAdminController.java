@@ -1,10 +1,11 @@
-package ru.practicum.controller.adminapi;
+package ru.practicum.controller.admin;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.dto.user.NewUserRequest;
 import ru.practicum.dto.user.UserDto;
@@ -16,17 +17,18 @@ import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
 @AllArgsConstructor
-@RequestMapping(path = "/admin")
+@RequestMapping(path = "/admin/users", produces = MediaType.APPLICATION_JSON_VALUE)
 @Tag(name = "Admin: Пользователи", description = "API для работы с пользователями")
 public class UsersAdminController {
 
     private final UsersService usersService;
 
-    @PostMapping("/users")
+    @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
     @Operation(summary = "Добавление нового пользователя")
     public UserDto createUser(@RequestBody @Valid NewUserRequest newUserRequest) {
@@ -34,7 +36,7 @@ public class UsersAdminController {
         return UserMapper.mapUsersToUserDto(usersService.createUser(user));
     }
 
-    @GetMapping("/users")
+    @GetMapping
     @Operation(
             summary = "Получение информации о пользователях",
             description = "Возвращает информацию обо всех пользователях (учитываются параметры ограничения выборки), либо о конкретных (учитываются указанные идентификаторы).\n" +
@@ -43,10 +45,13 @@ public class UsersAdminController {
     public List<UserDto> getUsers(@RequestParam List<Integer> ids,
                                   @RequestParam(defaultValue = "0") @PositiveOrZero int from,
                                   @RequestParam(defaultValue = "10") @Positive int size) {
-        return usersService.getUsers(ids, from, size);
+        return usersService.getUsers(ids, from, size)
+                .stream()
+                .map(UserMapper::mapUsersToUserDto)
+                .collect(Collectors.toList());
     }
 
-    @DeleteMapping("/users/{userId}")
+    @DeleteMapping("/{userId}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     @Operation(summary = "Удаление пользователя")
     public void deleteUser(@PathVariable @Positive Integer userId) {

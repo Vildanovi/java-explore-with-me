@@ -1,4 +1,4 @@
-package ru.practicum.controller.publicapi;
+package ru.practicum.controller.pub;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -17,7 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 @RequestMapping(path = "/categories")
 @Tag(name = "Public: Категории", description = "Публичный API для работы с категориями")
-public class CategoriesController {
+public class CategoryPublicController {
 
     private final CategoriesService categoriesService;
 

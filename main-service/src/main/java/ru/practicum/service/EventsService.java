@@ -10,7 +10,7 @@ import ru.practicum.dto.request.EventRequestStatusUpdateRequest;
 import ru.practicum.dto.request.EventRequestStatusUpdateResult;
 import ru.practicum.dto.request.ParticipationRequestDto;
 import ru.practicum.model.enumerations.EventState;
-import ru.practicum.repository.EventsRepository;
+import ru.practicum.repository.EventRepository;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -20,7 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class EventsService {
 
-    private final EventsRepository eventsRepository;
+    private final EventRepository eventRepository;
 
     public List<EventShortDto> getAllEventsByUser(Integer userId, int from, int size) {
         return Collections.emptyList();

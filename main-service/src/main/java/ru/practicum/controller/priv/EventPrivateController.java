@@ -1,10 +1,11 @@
-package ru.practicum.controller.privateapi;
+package ru.practicum.controller.priv;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.dto.event.EventFullDto;
 import ru.practicum.dto.event.EventShortDto;
@@ -23,13 +24,13 @@ import java.util.List;
 @Slf4j
 @RestController
 @AllArgsConstructor
-@RequestMapping(path = "/users")
+@RequestMapping(path = "/users/{userId}/events", produces = MediaType.APPLICATION_JSON_VALUE)
 @Tag(name = "Private: События", description = "Закрытый API для работы с событиями")
 public class EventPrivateController {
 
     private final EventsService eventsService;
 
-    @GetMapping("/{userId}/events")
+    @GetMapping
     @Operation(
             summary = "Получение событий, добавленных текущим пользователем",
             description = "В случае, если по заданным фильтрам не найдено ни одного события, возвращает " +
@@ -41,7 +42,7 @@ public class EventPrivateController {
         return eventsService.getAllEventsByUser(userId, from, size);
     }
 
-    @PostMapping("/{userId}/events")
+    @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
     @Operation(
             summary = "Добавление нового события",
@@ -53,7 +54,7 @@ public class EventPrivateController {
         return eventsService.createEvent(userId, newEventDto);
     }
 
-    @GetMapping("/{userId}/events/{eventId}")
+    @GetMapping("/{eventId}")
     @Operation(
             summary = "Получение полной информации о событии добавленном текущим пользователем",
             description = "В случае, если события с заданным id не найдено, возвращает статус код 404"
@@ -63,7 +64,7 @@ public class EventPrivateController {
         return eventsService.getEventByUser(userId, eventId);
     }
 
-    @PatchMapping("/{userId}/events/{eventId}")
+    @PatchMapping("/{eventId}")
     @Operation(
             summary = "Изменение события добавленного текущим пользователем",
             description = "Обратите внимание: \n" +
@@ -76,7 +77,7 @@ public class EventPrivateController {
         return eventsService.updateEventByUser(userId, eventId, updateEventUserRequest);
     }
 
-    @GetMapping("/{userId}/events/{eventId}/requests")
+    @GetMapping("/{eventId}/requests")
     @Operation(
             summary = "Получение информации о запросах на участие в событии текущего пользователя",
             description = "В случае, если по заданным фильтрам не найдено ни одной заявки, возвращает пустой список"
@@ -86,7 +87,7 @@ public class EventPrivateController {
         return eventsService.getRequestsByEventId(userId, eventId);
     }
 
-    @PatchMapping("/{userId}/events/{eventId}/requests")
+    @PatchMapping("/{eventId}/requests")
     @Operation(
             summary = "Изменение статуса (подтверждена, отменена) заявок на участие в событии текущего пользователя",
             description = "Обратите внимание:\n" +

@@ -1,14 +1,16 @@
-package ru.practicum.controller.adminapi;
+package ru.practicum.controller.admin;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.dto.compilations.CompilationDto;
 import ru.practicum.dto.compilations.CompilationsResponseDto;
 import ru.practicum.dto.compilations.NewCompilationsDto;
-import ru.practicum.dto.compilations.UpdateCompilationsDto;
+import ru.practicum.dto.compilations.UpdateCompilationRequest;
 import ru.practicum.mapper.CompilationsMapper;
 import ru.practicum.service.CompilationsService;
 
@@ -18,35 +20,35 @@ import javax.validation.constraints.Positive;
 @Slf4j
 @RestController
 @AllArgsConstructor
-@RequestMapping(path = "/admin")
+@RequestMapping(path = "/admin/compilations", produces = MediaType.APPLICATION_JSON_VALUE)
 @Tag(name = "Admin: Подборки событий", description = "API для работы с подборками событий")
 public class CompilationsAdminController {
 
     private final CompilationsService compilationsService;
 
-    @PostMapping("/compilations")
+    @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
     @Operation(summary = "Добавление новой подборки (подборка может не содержать событий)")
-    public CompilationsResponseDto createCompilations(@RequestBody @Valid NewCompilationsDto newCompilationsDto) {
+    public CompilationDto createCompilations(@RequestBody @Valid NewCompilationsDto newCompilationsDto) {
         return CompilationsMapper
-                .mapCompilationsDtoToCompilationsResponseDto(compilationsService
+                .mapCompilationToCompilationDto(compilationsService
                         .createCompilations(newCompilationsDto));
     }
 
-    @DeleteMapping("/compilations/{compId}")
+    @DeleteMapping("/{compId}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     @Operation(summary = "Удаление подборки")
     public void deleteCompilations(@PathVariable @Positive int compId) {
         compilationsService.deleteCompilations(compId);
     }
 
-    @DeleteMapping("/compilations/{compId}")
+    @DeleteMapping("/{compId}")
     @ResponseStatus(value = HttpStatus.OK)
     @Operation(summary = "Обновить информацию о подборке")
-    public CompilationsResponseDto putCompilations(@PathVariable @Positive int compId,
-                                                   @RequestBody @Valid UpdateCompilationsDto updateCompilationsDto) {
+    public CompilationDto putCompilations(@PathVariable @Positive int compId,
+                                                   @RequestBody @Valid UpdateCompilationRequest updateCompilationRequest) {
         return CompilationsMapper
-                .mapCompilationsDtoToCompilationsResponseDto(compilationsService
-                        .putCompilations(compId, updateCompilationsDto));
+                .mapCompilationToCompilationDto(compilationsService
+                        .putCompilations(compId, updateCompilationRequest));
     }
 }

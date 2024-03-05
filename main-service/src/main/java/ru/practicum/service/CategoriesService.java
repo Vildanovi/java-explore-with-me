@@ -7,7 +7,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import ru.practicum.dto.category.CategoryDto;
 import ru.practicum.dto.category.NewCategoryDto;
-import ru.practicum.repository.CategoriesRepository;
+import ru.practicum.exception.EntityNotFoundException;
+import ru.practicum.exception.ValidationBadRequestException;
+import ru.practicum.model.Categories;
+import ru.practicum.repository.CategoryRepository;
+import ru.practicum.repository.EventRepository;
 
 import javax.validation.constraints.Positive;
 import java.util.List;
@@ -18,17 +22,29 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class CategoriesService {
 
-    private final CategoriesRepository categoriesRepository;
+    private final CategoryRepository categoryRepository;
+    private final EventRepository eventRepository;
 
-    public CategoryDto createCategory(NewCategoryDto newCategoryDto) {
-        return null;
+    @Transactional
+    public Categories createCategory(Categories categories) {
+        return categoryRepository.save(categories);
     }
 
     public void deleteCategory(int catId) {
+        if (!categoryRepository.existsById(catId)) {
+            throw new EntityNotFoundException("Объект не найден: " + catId);
+        }
+        if (eventRepository.existsEventsByCategoryId(catId)) {
+            throw new ValidationBadRequestException("Найдены события с указанной категорией: " + catId);
+        }
+        categoryRepository.deleteById(catId);
     }
 
-    public CategoryDto updateCategory(int catId, NewCategoryDto newCategoryDto) {
-        return null;
+    public Categories updateCategory(int catId, NewCategoryDto newCategoryDto) {
+        Categories updateCategory = categoryRepository.findById(catId)
+                .orElseThrow(() -> new EntityNotFoundException("Объект не найден: " + catId));
+        updateCategory.setName(newCategoryDto.getName());
+        return updateCategory;
     }
 
     public List<CategoryDto> getCategories(Integer from, Integer size) {

@@ -21,7 +21,7 @@ public class NewCompilationsDto {
             description = "Закреплена ли подборка на главной странице сайта")
     private boolean pinned;
     @NotBlank
-    @Size(min = 1, max = 50, message = "title < 1 или >50 симвлов")
+    @Size(min = 1, max = 50, message = "title < 1 или > 50 симвлов")
     @Schema(example = "Летние концерты", description = "Заголовок подборки")
     private String title;
 }

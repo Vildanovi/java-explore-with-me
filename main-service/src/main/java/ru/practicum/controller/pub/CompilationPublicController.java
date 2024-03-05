@@ -1,4 +1,4 @@
-package ru.practicum.controller.publicapi;
+package ru.practicum.controller.pub;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -17,7 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 @RequestMapping(path = "/compilations")
 @Tag(name = "Public: Подборки событий", description = "Публичный API для работы с подборками событий")
-public class CompilationsController {
+public class CompilationPublicController {
 
     private final CompilationsService compilationsService;
 
@@ -29,6 +29,10 @@ public class CompilationsController {
     public List<CompilationDto> getCompilations(@RequestParam(required = false) Boolean pinned,
                                                 @RequestParam(defaultValue = "0") @PositiveOrZero Integer from,
                                                 @RequestParam(defaultValue = "10") @Positive Integer size) {
+//        if (pinned == null) {
+//            return compilationsService.getAll(from, size);
+//        }
+
         return compilationsService.getCompilations(pinned, from, size);
     }
 

@@ -1,10 +1,11 @@
-package ru.practicum.controller.privateapi;
+package ru.practicum.controller.priv;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.dto.request.ParticipationRequestDto;
 import ru.practicum.service.RequestsService;
@@ -15,14 +16,14 @@ import java.util.List;
 @Slf4j
 @RestController
 @AllArgsConstructor
-@RequestMapping(path = "/users")
+@RequestMapping(path = "/users/{userId}/requests", produces = MediaType.APPLICATION_JSON_VALUE)
 @Tag(name = "Private: Запросы на участие", description = "Закрытый API для работы с " +
         "запросами текущего пользователя на участие в событиях")
 public class RequestsPrivateController {
 
     private final RequestsService requestsService;
 
-    @GetMapping("/{userId}/requests")
+    @GetMapping
     @Operation(
             summary = "Получение информации о заявках текущего пользователя на участие в чужих событиях",
             description = "В случае, если по заданным фильтрам не найдено ни одной заявки, возвращает пустой список"
@@ -31,7 +32,7 @@ public class RequestsPrivateController {
         return requestsService.getRequestsByUser(userId);
     }
 
-    @PostMapping("/{userId}/requests")
+    @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
     @Operation(
             summary = "Добавление запроса от текущего пользователя на участие в событии",
@@ -47,7 +48,7 @@ public class RequestsPrivateController {
         return requestsService.createRequest(userId, eventId);
     }
 
-    @PatchMapping("/{userId}/requests/{requestId}/cancel")
+    @PatchMapping("/{requestId}/cancel")
     @Operation(
             summary = "Отмена своего запроса на участие в событии"
     )

@@ -1,13 +1,16 @@
-package ru.practicum.controller.publicapi;
+package ru.practicum.controller.pub;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.constant.Constants;
 import ru.practicum.dto.event.EventFullDto;
 import ru.practicum.dto.event.EventShortDto;
+import ru.practicum.model.enumerations.SortParam;
 import ru.practicum.service.EventsService;
 import ru.practicum.dto.EndPointHitDto;
 import ru.practicum.client.StatClient;
@@ -21,9 +24,9 @@ import java.util.List;
 @Slf4j
 @RestController
 @AllArgsConstructor
-@RequestMapping(path = "/events")
+@RequestMapping(path = "/events", produces = MediaType.APPLICATION_JSON_VALUE)
 @Tag(name = "Public: События", description = "Публичный API для работы с событиями")
-public class EventsController {
+public class EventPublicController {
 
     private final EventsService eventsService;
     private final StatClient statClient;
@@ -43,13 +46,13 @@ public class EventsController {
                     "- информацию о том, что по этому эндпоинту был осуществлен и обработан запрос, нужно сохранить в сервисе статистики\n" +
                     "В случае, если по заданным фильтрам не найдено ни одного события, возвращает пустой список"
     )
-    public List<EventShortDto> getEventsPublic(@RequestParam(defaultValue = "") String text,
-                                               @RequestParam(defaultValue = "") List<Integer> categories,
+    public List<EventShortDto> getEventsPublic(@RequestParam(required = false) String text,
+                                               @RequestParam(required = false) List<Integer> categories,
                                                @RequestParam(required = false) Boolean paid,
                                                @RequestParam(required = false) LocalDateTime rangeStart,
                                                @RequestParam(required = false) LocalDateTime rangeEnd,
                                                @RequestParam(required = false) boolean onlyAvailable,
-                                               @RequestParam(defaultValue = "") String sort,
+                                               @RequestParam(defaultValue = "EVENT_DATE") String sort,
                                                @RequestParam(defaultValue = "0") @PositiveOrZero int from,
                                                @RequestParam(defaultValue = "10") @Positive int size,
                                                HttpServletRequest request) {
