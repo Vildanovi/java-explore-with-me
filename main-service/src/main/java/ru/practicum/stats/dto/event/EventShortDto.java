@@ -1,4 +1,4 @@
-package ru.practicum.dto.event;
+package ru.practicum.stats.dto.event;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -7,8 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.practicum.constant.Constants;
-import ru.practicum.dto.category.CategoryDto;
-import ru.practicum.dto.user.UserShortDto;
+import ru.practicum.stats.dto.category.CategoryDto;
+import ru.practicum.stats.dto.user.UserShortDto;
 
 import java.time.LocalDateTime;
 

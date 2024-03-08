@@ -2,12 +2,12 @@ package ru.practicum.controller.priv;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.dto.request.ParticipationRequestDto;
+import ru.practicum.stats.dto.request.ParticipationRequestDto;
 import ru.practicum.service.RequestsService;
 
 import javax.validation.constraints.Positive;
@@ -15,7 +15,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RequestMapping(path = "/users/{userId}/requests", produces = MediaType.APPLICATION_JSON_VALUE)
 @Tag(name = "Private: Запросы на участие", description = "Закрытый API для работы с " +
         "запросами текущего пользователя на участие в событиях")

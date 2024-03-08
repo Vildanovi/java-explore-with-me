@@ -1,4 +1,4 @@
-package ru.practicum.dto;
+package ru.practicum.stats.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;

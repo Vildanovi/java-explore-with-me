@@ -5,21 +5,10 @@ CREATE TABLE IF NOT EXISTS users
     email VARCHAR(254)                                     NOT NULL UNIQUE
 );
 
-CREATE TABLE IF NOT EXISTS compilations
+CREATE TABLE IF NOT EXISTS category
 (
-    id     INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY NOT NULL,
-    pinned BOOLEAN                                          NOT NULL,
-    title  VARCHAR(50) UNIQUE
-);
-
-CREATE TABLE IF NOT EXISTS compilation_events
-(
-    compilation_id INTEGER NOT NULL,
-    event_id       INTEGER NOT NULL,
-    CONSTRAINT PK_COMPILATION_EVENT PRIMARY KEY (compilation_id, event_id),
-    CONSTRAINT FK_COMPILATION_EVENTS_COMPILATION FOREIGN KEY (compilation_id) REFERENCES compilations (id),
-    CONSTRAINT FK__COMPILATION_EVENTS_EVENT FOREIGN KEY (event_id) REFERENCES events (id)
-
+    id   INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY NOT NULL,
+    name VARCHAR(50)                                      NOT NULL UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS events
@@ -41,14 +30,8 @@ CREATE TABLE IF NOT EXISTS events
     state              VARCHAR(50)                                      NOT NULL,
     views              INTEGER,
     confirmedRequest   INTEGER,
-    CONSTRAINT FK_EVENT_CATEGORY FOREIGN KEY (category) REFERENCES categories (id),
+    CONSTRAINT FK_EVENT_CATEGORY FOREIGN KEY (category) REFERENCES category (id),
     CONSTRAINT FK_EVENT_INITIATOR FOREIGN KEY (initiator) REFERENCES users (id)
-);
-
-CREATE TABLE IF NOT EXISTS categories
-(
-    id   INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY NOT NULL,
-    name VARCHAR(50)                                      NOT NULL UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS requests
@@ -60,5 +43,21 @@ CREATE TABLE IF NOT EXISTS requests
     status    VARCHAR(50)                 NOT NULL,
     CONSTRAINT UNIQUE_REQUEST UNIQUE (event, requester),
     CONSTRAINT FK_REQUEST_EVENT FOREIGN KEY (event) REFERENCES events (id),
-    CONSTRAINT FK_REQUEST_REQUESTER FOREIGN KEY (requester) REFERENCES users (id),
+    CONSTRAINT FK_REQUEST_REQUESTER FOREIGN KEY (requester) REFERENCES users (id)
+);
+
+CREATE TABLE IF NOT EXISTS compilations
+(
+    id     INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY NOT NULL,
+    pinned BOOLEAN                                          NOT NULL,
+    title  VARCHAR(50) UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS compilation_events
+(
+    compilation_id INTEGER NOT NULL,
+    event_id       INTEGER NOT NULL,
+    CONSTRAINT PK_COMPILATION_EVENT PRIMARY KEY (compilation_id, event_id),
+    CONSTRAINT FK_COMPILATION_EVENTS_COMPILATION FOREIGN KEY (compilation_id) REFERENCES compilations (id),
+    CONSTRAINT FK__COMPILATION_EVENTS_EVENT FOREIGN KEY (event_id) REFERENCES events (id)
 );

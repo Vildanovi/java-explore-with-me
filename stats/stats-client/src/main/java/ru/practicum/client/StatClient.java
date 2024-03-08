@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.DefaultUriBuilderFactory;
-import ru.practicum.dto.EndPointHitDto;
+import ru.practicum.stats.dto.EndPointHitDto;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -41,4 +41,6 @@ public class StatClient extends BaseClient {
         return get("/stats?start={start}&end={end}&uris={uris}&unique={unique}", parameters);
 
     }
+
+
 }

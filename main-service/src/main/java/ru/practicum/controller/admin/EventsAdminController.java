@@ -2,13 +2,14 @@ package ru.practicum.controller.admin;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.dto.event.EventFullDto;
-import ru.practicum.dto.event.UpdateEventUserRequest;
-import ru.practicum.model.enumerations.EventState;
+import ru.practicum.stats.dto.event.EventFullDto;
+import ru.practicum.stats.dto.event.UpdateEventAdminRequest;
+import ru.practicum.mapper.EventMapper;
+import ru.practicum.model.enumerations.StateEvent;
 import ru.practicum.service.EventsService;
 
 import javax.validation.Valid;
@@ -19,7 +20,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RequestMapping(path = "/admin/events", produces = MediaType.APPLICATION_JSON_VALUE)
 @Tag(name = "Admin: События", description = "API для работы с событиями")
 public class EventsAdminController {
@@ -33,7 +34,7 @@ public class EventsAdminController {
                     "под переданные условия"
     )
     public List<EventFullDto> getEvents(@RequestParam(defaultValue = "") List<Integer> users,
-                                        @RequestParam(defaultValue = "") List<EventState> states,
+                                        @RequestParam(defaultValue = "") List<StateEvent> states,
                                         @RequestParam(defaultValue = "") List<Integer> categories,
                                         @RequestParam(required = false) LocalDateTime start,
                                         @RequestParam(required = false) LocalDateTime end,
@@ -52,7 +53,7 @@ public class EventsAdminController {
                     "- событие можно отклонить, только если оно еще не опубликовано (Ожидается код ошибки 409)"
     )
     public EventFullDto updateEventById(@PathVariable @Positive Integer eventId,
-                                        @RequestBody @Valid UpdateEventUserRequest updateEventDto) {
-        return eventsService.updateEventById(eventId, updateEventDto);
+                                        @RequestBody @Valid UpdateEventAdminRequest updateEventDto) {
+        return EventMapper.mapEventToEventFullDto(eventsService.updateEventById(eventId, updateEventDto));
     }
 }

@@ -2,15 +2,14 @@ package ru.practicum.controller.admin;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.dto.compilations.CompilationDto;
-import ru.practicum.dto.compilations.CompilationsResponseDto;
-import ru.practicum.dto.compilations.NewCompilationsDto;
-import ru.practicum.dto.compilations.UpdateCompilationRequest;
+import ru.practicum.stats.dto.compilations.CompilationDto;
+import ru.practicum.stats.dto.compilations.NewCompilationsDto;
+import ru.practicum.stats.dto.compilations.UpdateCompilationRequest;
 import ru.practicum.mapper.CompilationsMapper;
 import ru.practicum.service.CompilationsService;
 
@@ -19,7 +18,7 @@ import javax.validation.constraints.Positive;
 
 @Slf4j
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RequestMapping(path = "/admin/compilations", produces = MediaType.APPLICATION_JSON_VALUE)
 @Tag(name = "Admin: Подборки событий", description = "API для работы с подборками событий")
 public class CompilationsAdminController {
@@ -42,11 +41,11 @@ public class CompilationsAdminController {
         compilationsService.deleteCompilations(compId);
     }
 
-    @DeleteMapping("/{compId}")
+    @PatchMapping("/{compId}")
     @ResponseStatus(value = HttpStatus.OK)
     @Operation(summary = "Обновить информацию о подборке")
     public CompilationDto putCompilations(@PathVariable @Positive int compId,
-                                                   @RequestBody @Valid UpdateCompilationRequest updateCompilationRequest) {
+                                          @RequestBody @Valid UpdateCompilationRequest updateCompilationRequest) {
         return CompilationsMapper
                 .mapCompilationToCompilationDto(compilationsService
                         .putCompilations(compId, updateCompilationRequest));

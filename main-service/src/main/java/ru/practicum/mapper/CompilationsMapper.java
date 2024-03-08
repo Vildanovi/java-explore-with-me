@@ -1,9 +1,9 @@
 package ru.practicum.mapper;
 
 import lombok.experimental.UtilityClass;
-import ru.practicum.dto.compilations.CompilationDto;
-import ru.practicum.dto.compilations.CompilationsResponseDto;
-import ru.practicum.dto.compilations.NewCompilationsDto;
+import ru.practicum.stats.dto.compilations.CompilationDto;
+import ru.practicum.stats.dto.compilations.CompilationsResponseDto;
+import ru.practicum.stats.dto.compilations.NewCompilationsDto;
 import ru.practicum.model.Compilation;
 import ru.practicum.model.Event;
 

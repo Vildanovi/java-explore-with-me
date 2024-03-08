@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.dto.EndPointHitDto;
+import ru.practicum.stats.dto.EndPointHitDto;
 import ru.practicum.mapper.HitMapper;
 import ru.practicum.model.EndpointHit;
 import ru.practicum.model.ViewStats;
@@ -24,10 +24,6 @@ public class HitService {
     @Transactional
     public EndpointHit createHit(EndPointHitDto endPointHitDto) {
         return hitRepository.save(HitMapper.mapEndPointHitDtoToHit(endPointHitDto));
-    }
-
-    public List<EndpointHit> getHits() {
-        return hitRepository.findAll();
     }
 
     public List<ViewStats> getStats(LocalDateTime startDate, LocalDateTime endDate, List<String> uris, Boolean isUnique) {

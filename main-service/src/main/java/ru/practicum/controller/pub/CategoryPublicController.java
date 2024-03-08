@@ -2,10 +2,10 @@ package ru.practicum.controller.pub;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.dto.category.CategoryDto;
+import ru.practicum.stats.dto.category.CategoryDto;
 import ru.practicum.service.CategoriesService;
 
 import javax.validation.constraints.Positive;
@@ -14,7 +14,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RequestMapping(path = "/categories")
 @Tag(name = "Public: Категории", description = "Публичный API для работы с категориями")
 public class CategoryPublicController {

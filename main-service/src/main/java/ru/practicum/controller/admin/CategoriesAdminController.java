@@ -2,15 +2,15 @@ package ru.practicum.controller.admin;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.dto.category.CategoryDto;
-import ru.practicum.dto.category.NewCategoryDto;
+import ru.practicum.stats.dto.category.CategoryDto;
+import ru.practicum.stats.dto.category.NewCategoryDto;
 import ru.practicum.mapper.CategoryMapper;
-import ru.practicum.model.Categories;
+import ru.practicum.model.Category;
 import ru.practicum.service.CategoriesService;
 
 import javax.validation.Valid;
@@ -18,7 +18,7 @@ import javax.validation.constraints.Positive;
 
 @Slf4j
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RequestMapping(path = "/admin/categories", produces = MediaType.APPLICATION_JSON_VALUE)
 @Tag(name = "Admin: Категории", description = "API для работы с категориями")
 public class CategoriesAdminController {
@@ -32,8 +32,8 @@ public class CategoriesAdminController {
             description = "Обратите внимание: имя категории должно быть уникальным"
     )
     public CategoryDto createCategory(@RequestBody @Valid NewCategoryDto newCategoryDto) {
-        Categories categories = CategoryMapper.mapNewCategoryDtoToCategories(newCategoryDto);
-        return CategoryMapper.mapCategoriesToCategoryDto(categoriesService.createCategory(categories));
+        Category category = CategoryMapper.mapNewCategoryDtoToCategories(newCategoryDto);
+        return CategoryMapper.mapCategoriesToCategoryDto(categoriesService.createCategory(category));
     }
 
     @DeleteMapping("/{catId}")

@@ -2,18 +2,19 @@ package ru.practicum.controller.priv;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.dto.event.EventFullDto;
-import ru.practicum.dto.event.EventShortDto;
-import ru.practicum.dto.event.NewEventDto;
-import ru.practicum.dto.event.UpdateEventUserRequest;
-import ru.practicum.dto.request.EventRequestStatusUpdateRequest;
-import ru.practicum.dto.request.EventRequestStatusUpdateResult;
-import ru.practicum.dto.request.ParticipationRequestDto;
+import ru.practicum.stats.dto.event.EventFullDto;
+import ru.practicum.stats.dto.event.EventShortDto;
+import ru.practicum.stats.dto.event.NewEventDto;
+import ru.practicum.stats.dto.event.UpdateEventUserRequest;
+import ru.practicum.stats.dto.request.EventRequestStatusUpdateRequest;
+import ru.practicum.stats.dto.request.EventRequestStatusUpdateResult;
+import ru.practicum.stats.dto.request.ParticipationRequestDto;
+import ru.practicum.mapper.EventMapper;
 import ru.practicum.service.EventsService;
 
 import javax.validation.Valid;
@@ -23,7 +24,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RequestMapping(path = "/users/{userId}/events", produces = MediaType.APPLICATION_JSON_VALUE)
 @Tag(name = "Private: События", description = "Закрытый API для работы с событиями")
 public class EventPrivateController {
@@ -51,7 +52,7 @@ public class EventPrivateController {
     )
     public EventFullDto createEvent(@PathVariable @Positive Integer userId,
                                     @RequestBody @Valid NewEventDto newEventDto) {
-        return eventsService.createEvent(userId, newEventDto);
+        return EventMapper.mapEventToEventFullDto(eventsService.createEvent(userId, newEventDto));
     }
 
     @GetMapping("/{eventId}")

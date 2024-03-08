@@ -2,17 +2,15 @@ package ru.practicum.controller.pub;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.constant.Constants;
-import ru.practicum.dto.event.EventFullDto;
-import ru.practicum.dto.event.EventShortDto;
-import ru.practicum.model.enumerations.SortParam;
+import ru.practicum.stats.dto.event.EventFullDto;
+import ru.practicum.stats.dto.event.EventShortDto;
 import ru.practicum.service.EventsService;
-import ru.practicum.dto.EndPointHitDto;
+import ru.practicum.stats.dto.EndPointHitDto;
 import ru.practicum.client.StatClient;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,7 +21,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RequestMapping(path = "/events", produces = MediaType.APPLICATION_JSON_VALUE)
 @Tag(name = "Public: События", description = "Публичный API для работы с событиями")
 public class EventPublicController {
@@ -32,7 +30,7 @@ public class EventPublicController {
     private final StatClient statClient;
 
     @Value("${service-name}")
-    private String serviceName;
+    private String application;
 
     @GetMapping
     @Operation(
@@ -77,7 +75,7 @@ public class EventPublicController {
 
     private void createHit(HttpServletRequest request) {
         EndPointHitDto endpointHitRequestDto = EndPointHitDto.builder()
-                .app(serviceName)
+                .app(application)
                 .ip(request.getRemoteAddr())
                 .uri(request.getRequestURI())
                 .timestamp(LocalDateTime.now())

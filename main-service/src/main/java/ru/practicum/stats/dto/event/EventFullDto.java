@@ -1,4 +1,4 @@
-package ru.practicum.dto.event;
+package ru.practicum.stats.dto.event;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -7,10 +7,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.practicum.constant.Constants;
-import ru.practicum.dto.Locations.LocationDto;
-import ru.practicum.dto.category.CategoryDto;
-import ru.practicum.dto.user.UserShortDto;
-import ru.practicum.model.enumerations.EventState;
+import ru.practicum.stats.dto.Locations.LocationDto;
+import ru.practicum.stats.dto.category.CategoryDto;
+import ru.practicum.stats.dto.user.UserShortDto;
+import ru.practicum.model.enumerations.StateEvent;
 
 import java.time.LocalDateTime;
 
@@ -53,7 +53,7 @@ public class EventFullDto {
                     "Если false - то будут подтверждаться автоматически.")
     private boolean requestModeration;
     @Schema(example = "PUBLISHED", description = "Список состояний жизненного цикла события")
-    private EventState state;
+    private StateEvent state;
     @Schema(example = "Знаменитое шоу 'Летающая кукуруза'", description = "Заголовок")
     private String title;
     @Schema(example = "999", description = "Количество просмотров события")

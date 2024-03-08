@@ -5,11 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
-import ru.practicum.dto.category.CategoryDto;
-import ru.practicum.dto.category.NewCategoryDto;
+import ru.practicum.stats.dto.category.CategoryDto;
+import ru.practicum.stats.dto.category.NewCategoryDto;
 import ru.practicum.exception.EntityNotFoundException;
 import ru.practicum.exception.ValidationBadRequestException;
-import ru.practicum.model.Categories;
+import ru.practicum.model.Category;
 import ru.practicum.repository.CategoryRepository;
 import ru.practicum.repository.EventRepository;
 
@@ -26,8 +26,8 @@ public class CategoriesService {
     private final EventRepository eventRepository;
 
     @Transactional
-    public Categories createCategory(Categories categories) {
-        return categoryRepository.save(categories);
+    public Category createCategory(Category category) {
+        return categoryRepository.save(category);
     }
 
     public void deleteCategory(int catId) {
@@ -40,8 +40,8 @@ public class CategoriesService {
         categoryRepository.deleteById(catId);
     }
 
-    public Categories updateCategory(int catId, NewCategoryDto newCategoryDto) {
-        Categories updateCategory = categoryRepository.findById(catId)
+    public Category updateCategory(int catId, NewCategoryDto newCategoryDto) {
+        Category updateCategory = categoryRepository.findById(catId)
                 .orElseThrow(() -> new EntityNotFoundException("Объект не найден: " + catId));
         updateCategory.setName(newCategoryDto.getName());
         return updateCategory;

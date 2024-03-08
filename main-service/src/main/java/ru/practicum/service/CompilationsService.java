@@ -1,16 +1,18 @@
 package ru.practicum.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
-import ru.practicum.dto.compilations.CompilationDto;
-import ru.practicum.dto.compilations.NewCompilationsDto;
-import ru.practicum.dto.compilations.UpdateCompilationRequest;
+import ru.practicum.constant.Constants;
+import ru.practicum.stats.dto.compilations.NewCompilationsDto;
+import ru.practicum.stats.dto.compilations.UpdateCompilationRequest;
 import ru.practicum.exception.EntityNotFoundException;
 import ru.practicum.mapper.CompilationsMapper;
 import ru.practicum.model.Compilation;
 import ru.practicum.model.Event;
+import ru.practicum.pageable.OffsetBasedPageRequest;
 import ru.practicum.repository.CompilationRepository;
 import ru.practicum.repository.EventRepository;
 
@@ -46,12 +48,13 @@ public class CompilationsService {
         compilationRepository.deleteById(compId);
     }
 
+    @Transactional
     public Compilation putCompilations(int compId, UpdateCompilationRequest updateCompilationRequest) {
         Compilation compilation = compilationRepository.findById(compId)
                 .orElseThrow(() -> new EntityNotFoundException("Объект не найден: " + compId));
 
         Set<Integer> eventsIds = updateCompilationRequest.getEvents();
-        Set<Event> events = new HashSet<>();
+        Set<Event> events;
 
         if (eventsIds != null) {
             events = eventRepository.findAllByIdIn(eventsIds);
@@ -65,15 +68,22 @@ public class CompilationsService {
         if (pinned != null) {
             compilation.setPinned(pinned);
         }
-
         return compilation;
     }
 
-    public List<CompilationDto> getCompilations(Boolean pinned, Integer from, @Positive Integer size) {
-        return null;
+    public List<Compilation> getCompilations(Boolean pinned, Integer from, @Positive Integer size) {
+        Pageable pageable = new OffsetBasedPageRequest(from, size, Constants.SORT_DESC_ID);
+        List<Compilation> compilations;
+        if (pinned != null) {
+            compilations = compilationRepository.findAllByPinnedIs(pinned, pageable);
+        } else {
+            compilations = compilationRepository.findAll(pageable).getContent();
+        }
+        return compilations;
     }
 
-    public CompilationDto getCompilationById(@PathVariable @Positive int compId) {
-        return null;
+    public Compilation getCompilationById(@PathVariable @Positive int compId) {
+        return compilationRepository.findById(compId)
+                .orElseThrow(() -> new EntityNotFoundException("Объект не найден: " + compId));
     }
 }

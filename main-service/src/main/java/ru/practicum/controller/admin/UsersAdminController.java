@@ -2,13 +2,13 @@ package ru.practicum.controller.admin;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.dto.user.NewUserRequest;
-import ru.practicum.dto.user.UserDto;
+import ru.practicum.stats.dto.user.NewUserRequest;
+import ru.practicum.stats.dto.user.UserDto;
 import ru.practicum.mapper.UserMapper;
 import ru.practicum.model.Users;
 import ru.practicum.service.UsersService;
@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RequestMapping(path = "/admin/users", produces = MediaType.APPLICATION_JSON_VALUE)
 @Tag(name = "Admin: Пользователи", description = "API для работы с пользователями")
 public class UsersAdminController {
