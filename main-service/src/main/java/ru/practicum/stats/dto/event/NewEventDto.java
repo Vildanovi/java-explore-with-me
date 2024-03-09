@@ -19,6 +19,11 @@ import java.time.LocalDateTime;
 @Schema(description = "Новое событие")
 public class NewEventDto {
     @NotBlank
+    @Size(min = 3, max = 120, message = "title < 3 или >120 симвлов")
+    @Schema(example = "Сплав на байдарках",
+            description = "Заголовок события")
+    private String title;
+    @NotBlank
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     @Size(min = 20, max = 2000, message = "annotation < 20 или >2000 симвлов")
     private String annotation;
@@ -47,10 +52,5 @@ public class NewEventDto {
             description = "Нужна ли пре-модерация заявок на участие. Если true, " +
                     "то все заявки будут ожидать подтверждения инициатором события. " +
                     "Если false - то будут подтверждаться автоматически.")
-    private boolean requestModeration = true;
-    @NotBlank
-    @Size(min = 3, max = 120, message = "title < 3 или >120 симвлов")
-    @Schema(example = "Сплав на байдарках",
-            description = "Заголовок события")
-    private String title;
+    private boolean requestModeration;
 }

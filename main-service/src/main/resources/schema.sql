@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS events
     id                 INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY NOT NULL,
     annotation         VARCHAR(2000),
     category           INTEGER                                          NOT NULL,
-    created            TIMESTAMP WITHOUT TIME ZONE                      NOT NULL,
+    created            TIMESTAMP WITHOUT TIME ZONE,
     description        VARCHAR(7000)                                    NOT NULL,
     event_date         TIMESTAMP WITHOUT TIME ZONE                      NOT NULL,
     initiator          INTEGER                                          NOT NULL,

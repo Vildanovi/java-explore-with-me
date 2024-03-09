@@ -1,11 +1,14 @@
 package ru.practicum.mapper;
 
 import lombok.experimental.UtilityClass;
+import ru.practicum.model.enumerations.StateEvent;
 import ru.practicum.stats.dto.Locations.LocationDto;
 import ru.practicum.stats.dto.event.EventFullDto;
 import ru.practicum.stats.dto.event.EventShortDto;
 import ru.practicum.stats.dto.event.NewEventDto;
 import ru.practicum.model.Event;
+
+import java.time.LocalDateTime;
 
 @UtilityClass
 public class EventMapper {
@@ -14,6 +17,9 @@ public class EventMapper {
         return Event.builder()
                 .annotation(newEventDto.getAnnotation())
                 .description(newEventDto.getDescription())
+                .createdOn(LocalDateTime.now())
+                .eventDate(newEventDto.getEventDate())
+                .state(StateEvent.PENDING)
                 .lon(newEventDto.getLocation().getLon())
                 .lat(newEventDto.getLocation().getLat())
                 .paid(newEventDto.isPaid())

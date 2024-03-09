@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.mapper.ParticipationRequestMapper;
 import ru.practicum.stats.dto.request.ParticipationRequestDto;
 import ru.practicum.service.RequestsService;
 
@@ -45,7 +46,9 @@ public class RequestsPrivateController {
     )
     public ParticipationRequestDto createRequest(@PathVariable @Positive Integer userId,
                                                  @RequestParam @Positive Integer eventId) {
-        return requestsService.createRequest(userId, eventId);
+        return ParticipationRequestMapper
+                .mapParticipationRequestToParticipationRequestDto(requestsService
+                        .createRequest(userId, eventId));
     }
 
     @PatchMapping("/{requestId}/cancel")
@@ -54,6 +57,8 @@ public class RequestsPrivateController {
     )
     public ParticipationRequestDto cancelRequest(@PathVariable @Positive Integer userId,
                                                  @PathVariable @Positive Integer requestId) {
-        return requestsService.cancelRequest(userId, requestId);
+        return ParticipationRequestMapper
+                .mapParticipationRequestToParticipationRequestDto(requestsService
+                        .cancelRequest(userId, requestId));
     }
 }

@@ -27,7 +27,7 @@ public class StatClient extends BaseClient {
     }
 
     public ResponseEntity<Object> createHit(EndPointHitDto endPointHitDto) {
-        return post("", endPointHitDto);
+        return post("/hit", endPointHitDto);
     }
 
     public ResponseEntity<Object> getStats(LocalDateTime start, LocalDateTime end,
@@ -39,7 +39,6 @@ public class StatClient extends BaseClient {
                 "unique", unique
         );
         return get("/stats?start={start}&end={end}&uris={uris}&unique={unique}", parameters);
-
     }
 
 

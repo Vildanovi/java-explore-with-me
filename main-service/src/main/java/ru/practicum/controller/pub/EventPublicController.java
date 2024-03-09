@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.mapper.EventMapper;
 import ru.practicum.stats.dto.event.EventFullDto;
 import ru.practicum.stats.dto.event.EventShortDto;
 import ru.practicum.service.EventsService;
@@ -18,6 +19,7 @@ import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -55,7 +57,10 @@ public class EventPublicController {
                                                @RequestParam(defaultValue = "10") @Positive int size,
                                                HttpServletRequest request) {
         createHit(request);
-        return eventsService.getEventsPublic(text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort, from, size);
+        return eventsService.getEventsPublic(text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort, from, size)
+                .stream()
+                .map(EventMapper::mapEventToEventShortDto)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
@@ -70,7 +75,7 @@ public class EventPublicController {
     public EventFullDto getEventById(@PathVariable @Positive Integer id,
                                      HttpServletRequest request) {
         createHit(request);
-        return eventsService.getEventById(id);
+        return EventMapper.mapEventToEventFullDto(eventsService.getEventById(id));
     }
 
     private void createHit(HttpServletRequest request) {
@@ -82,5 +87,4 @@ public class EventPublicController {
                 .build();
         statClient.createHit(endpointHitRequestDto);
     }
-
 }

@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.mapper.ParticipationRequestMapper;
 import ru.practicum.stats.dto.event.EventFullDto;
 import ru.practicum.stats.dto.event.EventShortDto;
 import ru.practicum.stats.dto.event.NewEventDto;
@@ -21,6 +22,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -85,7 +87,10 @@ public class EventPrivateController {
     )
     public List<ParticipationRequestDto> getRequestsByEventId(@PathVariable @Positive Integer userId,
                                                               @PathVariable @Positive Integer eventId) {
-        return eventsService.getRequestsByEventId(userId, eventId);
+        return eventsService.getRequestsByEventId(userId, eventId)
+                .stream()
+                .map(ParticipationRequestMapper::mapParticipationRequestToParticipationRequestDto)
+                .collect(Collectors.toList());
     }
 
     @PatchMapping("/{eventId}/requests")

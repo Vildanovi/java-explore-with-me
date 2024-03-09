@@ -23,9 +23,7 @@ public class Event {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "category", nullable = false)
     private Category category;
-//    @CreatedDate
-//    @Builder.Default
-    @Column(name = "created", nullable = false)
+    @Column(name = "created")
     private LocalDateTime createdOn;
     private String description;
     @Column(name = "event_date", nullable = false)
@@ -40,13 +38,12 @@ public class Event {
     private int participantLimit;
     @Column(name = "published")
     private LocalDateTime publishedOn;
-//    @Builder.Default
     @Column(name = "request_moderation")
     private boolean requestModeration = true;
     @Enumerated(EnumType.STRING)
 //    @Builder.Default
     @Column(nullable = false)
-    private StateEvent state = StateEvent.PENDING;
+    private StateEvent state;
     @Transient
     private int views;
     @Transient

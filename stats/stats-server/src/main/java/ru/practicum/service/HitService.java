@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.exception.BadRequestException;
 import ru.practicum.stats.dto.EndPointHitDto;
 import ru.practicum.mapper.HitMapper;
 import ru.practicum.model.EndpointHit;
@@ -28,6 +29,9 @@ public class HitService {
 
     public List<ViewStats> getStats(LocalDateTime startDate, LocalDateTime endDate, List<String> uris, Boolean isUnique) {
         List<ViewStats> stats;
+        if (startDate.equals(endDate) || endDate.isBefore(startDate)) {
+            throw new BadRequestException("Некорректные даты");
+        }
         if (uris != null) {
             if (!isUnique) {
                 stats = hitRepository.findByUrisAndStartAndEnd(startDate, endDate, uris);

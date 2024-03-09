@@ -38,4 +38,22 @@ public interface HitRepository extends JpaRepository<EndpointHit, Long> {
     List<ViewStats> findUniqueByUrisAndStartAndEnd(@Param("start") LocalDateTime start,
                                                    @Param("end") LocalDateTime end,
                                                    @Param("uris") List<String> uris);
+
+    @Query(value =
+            "SELECT app AS app, uri AS uri, COUNT(ip) AS ip FROM EndpointHit" +
+                    " WHERE uri IN :uris AND (timestamp >= :start AND timestamp <= :end) GROUP BY app, uri"
+
+    )
+    List<ViewStats> findAllByUris(@Param("uris") List<String> uris,
+                                  @Param("start") LocalDateTime start,
+                                  @Param("end") LocalDateTime end);
+
+    @Query(value =
+            "SELECT app AS app, uri AS uri, COUNT(DISTINCT ip) AS ip FROM EndpointHit" +
+                    " WHERE uri IN :uris AND (timestamp >= :start AND timestamp < :end) GROUP BY app, uri"
+    )
+    List<ViewStats> findAllUnique(@Param("uris") List<String> uris,
+                                  @Param("start") LocalDateTime start,
+                                  @Param("end") LocalDateTime end);
+
 }
