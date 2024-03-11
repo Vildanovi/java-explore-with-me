@@ -5,8 +5,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.constant.Constants;
 import ru.practicum.mapper.EventMapper;
 import ru.practicum.stats.dto.event.EventFullDto;
 import ru.practicum.stats.dto.event.EventShortDto;
@@ -49,12 +51,12 @@ public class EventPublicController {
     public List<EventShortDto> getEventsPublic(@RequestParam(required = false) String text,
                                                @RequestParam(required = false) List<Integer> categories,
                                                @RequestParam(required = false) Boolean paid,
-                                               @RequestParam(required = false) LocalDateTime rangeStart,
-                                               @RequestParam(required = false) LocalDateTime rangeEnd,
+                                               @RequestParam(required = false) @DateTimeFormat(pattern = Constants.DATE_PATTERN) LocalDateTime rangeStart,
+                                               @RequestParam(required = false) @DateTimeFormat(pattern = Constants.DATE_PATTERN) LocalDateTime rangeEnd,
                                                @RequestParam(required = false) boolean onlyAvailable,
-                                               @RequestParam(defaultValue = "EVENT_DATE") String sort,
-                                               @RequestParam(defaultValue = "0") @PositiveOrZero int from,
-                                               @RequestParam(defaultValue = "10") @Positive int size,
+                                               @RequestParam(required = false, defaultValue = "EVENT_DATE") String sort,
+                                               @RequestParam(required = false, defaultValue = "0") int from,
+                                               @RequestParam(required = false, defaultValue = "10") int size,
                                                HttpServletRequest request) {
         createHit(request);
         return eventsService.getEventsPublic(text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort, from, size)

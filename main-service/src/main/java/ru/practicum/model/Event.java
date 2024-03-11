@@ -39,7 +39,7 @@ public class Event {
     @Column(name = "published")
     private LocalDateTime publishedOn;
     @Column(name = "request_moderation")
-    private boolean requestModeration = true;
+    private boolean requestModeration;
     @Enumerated(EnumType.STRING)
 //    @Builder.Default
     @Column(nullable = false)
@@ -48,19 +48,4 @@ public class Event {
     private int views;
     @Transient
     private int confirmedRequest;
-
-    @Transient
-    public boolean isPublished() {
-        return state.equals(StateEvent.PUBLISHED);
-    }
-
-    @Transient
-    public boolean isCanceled() {
-        return state.equals(StateEvent.CANCELED);
-    }
-
-    @Transient
-    public boolean isPending() {
-        return state.equals(StateEvent.PENDING);
-    }
 }

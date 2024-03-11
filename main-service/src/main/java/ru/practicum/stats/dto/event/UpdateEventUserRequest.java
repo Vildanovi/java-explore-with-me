@@ -7,7 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.practicum.constant.Constants;
-import ru.practicum.stats.dto.Locations.LocationDto;
+import ru.practicum.stats.dto.locations.LocationDto;
 
 import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;

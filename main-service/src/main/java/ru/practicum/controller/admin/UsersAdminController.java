@@ -15,7 +15,6 @@ import ru.practicum.service.UsersService;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
-import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,8 +42,8 @@ public class UsersAdminController {
                     "В случае, если по заданным фильтрам не найдено ни одного пользователя, возвращает пустой список"
     )
     public List<UserDto> getUsers(@RequestParam List<Integer> ids,
-                                  @RequestParam(defaultValue = "0") @PositiveOrZero int from,
-                                  @RequestParam(defaultValue = "10") @Positive int size) {
+                                  @RequestParam(defaultValue = "0") int from,
+                                  @RequestParam(defaultValue = "10") int size) {
         return usersService.getUsers(ids, from, size)
                 .stream()
                 .map(UserMapper::mapUsersToUserDto)

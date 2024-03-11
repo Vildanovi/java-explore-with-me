@@ -42,7 +42,10 @@ public class EventPrivateController {
     public List<EventShortDto> getAllEventsByUser(@PathVariable @Positive Integer userId,
                                                   @RequestParam(defaultValue = "0") @PositiveOrZero Integer from,
                                                   @RequestParam(defaultValue = "10") @Positive Integer size) {
-        return eventsService.getAllEventsByUser(userId, from, size);
+        return eventsService.getAllEventsByUser(userId, from, size)
+                .stream()
+                .map(EventMapper::mapEventToEventShortDto)
+                .collect(Collectors.toList());
     }
 
     @PostMapping
@@ -64,7 +67,9 @@ public class EventPrivateController {
     )
     public EventFullDto getEventByUser(@PathVariable @Positive Integer userId,
                                        @PathVariable @Positive Integer eventId) {
-        return eventsService.getEventByUser(userId, eventId);
+        return EventMapper
+                .mapEventToEventFullDto(eventsService
+                        .getEventByUser(userId, eventId));
     }
 
     @PatchMapping("/{eventId}")
@@ -77,7 +82,8 @@ public class EventPrivateController {
     public EventFullDto updateEventByUser(@PathVariable @Positive Integer userId,
                                           @PathVariable @Positive Integer eventId,
                                           @RequestBody @Valid UpdateEventUserRequest updateEventUserRequest) {
-        return eventsService.updateEventByUser(userId, eventId, updateEventUserRequest);
+        return EventMapper.mapEventToEventFullDto(eventsService
+                .updateEventByUser(userId, eventId, updateEventUserRequest));
     }
 
     @GetMapping("/{eventId}/requests")

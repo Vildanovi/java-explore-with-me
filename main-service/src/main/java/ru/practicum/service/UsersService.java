@@ -26,9 +26,14 @@ public class UsersService {
 
     public List<Users> getUsers(List<Integer> ids, int from, int size) {
         Pageable page = new OffsetBasedPageRequest(from, size, Constants.SORT_DESC_ID);
-        return userRepository.findAllByIdIn(ids, page);
+        if (ids.isEmpty()) {
+            return userRepository.findAll(page).getContent();
+        } else {
+            return userRepository.findAllByIdIn(ids, page);
+        }
     }
 
+    @Transactional
     public void deleteUser(Integer userId) {
         if (!userRepository.existsById(userId)) {
             throw new EntityNotFoundException("Объект не найден: " + userId);

@@ -7,7 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.practicum.constant.Constants;
-import ru.practicum.stats.dto.Locations.LocationDto;
+import ru.practicum.stats.dto.locations.LocationDto;
 import ru.practicum.stats.dto.category.CategoryDto;
 import ru.practicum.stats.dto.user.UserShortDto;
 import ru.practicum.model.enumerations.StateEvent;

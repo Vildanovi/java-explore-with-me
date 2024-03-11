@@ -2,10 +2,12 @@ package ru.practicum.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
-import ru.practicum.stats.dto.category.CategoryDto;
+import ru.practicum.constant.Constants;
+import ru.practicum.pageable.OffsetBasedPageRequest;
 import ru.practicum.stats.dto.category.NewCategoryDto;
 import ru.practicum.exception.EntityNotFoundException;
 import ru.practicum.exception.ValidationBadRequestException;
@@ -30,6 +32,7 @@ public class CategoriesService {
         return categoryRepository.save(category);
     }
 
+    @Transactional
     public void deleteCategory(int catId) {
         if (!categoryRepository.existsById(catId)) {
             throw new EntityNotFoundException("Объект не найден: " + catId);
@@ -40,6 +43,7 @@ public class CategoriesService {
         categoryRepository.deleteById(catId);
     }
 
+    @Transactional
     public Category updateCategory(int catId, NewCategoryDto newCategoryDto) {
         Category updateCategory = categoryRepository.findById(catId)
                 .orElseThrow(() -> new EntityNotFoundException("Объект не найден: " + catId));
@@ -47,11 +51,13 @@ public class CategoriesService {
         return updateCategory;
     }
 
-    public List<CategoryDto> getCategories(Integer from, Integer size) {
-        return null;
+    public List<Category> getCategories(Integer from, Integer size) {
+        Pageable pageable = new OffsetBasedPageRequest(from, size, Constants.SORT_ASC_ID);
+        return categoryRepository.findAll(pageable).getContent();
     }
 
-    public CategoryDto getCategoryById(@PathVariable @Positive int catId) {
-        return null;
+    public Category getCategoryById(@PathVariable @Positive int catId) {
+        return categoryRepository.findById(catId)
+                .orElseThrow(() -> new EntityNotFoundException("Объект не найден: " + catId));
     }
 }

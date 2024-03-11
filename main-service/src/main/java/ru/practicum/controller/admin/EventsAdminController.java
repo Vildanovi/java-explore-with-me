@@ -17,6 +17,7 @@ import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -33,14 +34,17 @@ public class EventsAdminController {
             description = "Эндпоинт возвращает полную информацию обо всех событиях подходящих " +
                     "под переданные условия"
     )
-    public List<EventFullDto> getEvents(@RequestParam(defaultValue = "") List<Integer> users,
-                                        @RequestParam(defaultValue = "") List<StateEvent> states,
-                                        @RequestParam(defaultValue = "") List<Integer> categories,
-                                        @RequestParam(required = false) LocalDateTime start,
-                                        @RequestParam(required = false) LocalDateTime end,
-                                        @RequestParam(defaultValue = "0") @PositiveOrZero int from,
-                                        @RequestParam(defaultValue = "10") @Positive int size) {
-        return eventsService.getEvents(users, states, categories, start, end, from, size);
+    public List<EventFullDto> getEvents(@RequestParam(required = false) List<Integer> users,
+                                        @RequestParam(required = false) List<StateEvent> states,
+                                        @RequestParam(required = false) List<Integer> categories,
+                                        @RequestParam(required = false) LocalDateTime rangeStart,
+                                        @RequestParam(required = false) LocalDateTime rangeEnd,
+                                        @RequestParam(required = false, defaultValue = "0") int from,
+                                        @RequestParam(required = false, defaultValue = "10") int size) {
+        return eventsService.getEvents(users, states, categories, rangeStart, rangeEnd, from, size)
+                .stream()
+                .map(EventMapper::mapEventToEventFullDto)
+                .collect(Collectors.toList());
     }
 
     @PatchMapping("/{eventId}")

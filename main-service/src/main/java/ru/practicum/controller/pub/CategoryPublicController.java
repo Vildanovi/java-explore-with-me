@@ -5,12 +5,14 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.mapper.CategoryMapper;
 import ru.practicum.stats.dto.category.CategoryDto;
 import ru.practicum.service.CategoriesService;
 
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -28,7 +30,10 @@ public class CategoryPublicController {
     )
     public List<CategoryDto> getCategories(@RequestParam(defaultValue = "0") @PositiveOrZero Integer from,
                                            @RequestParam(defaultValue = "10") @Positive Integer size) {
-        return categoriesService.getCategories(from, size);
+        return categoriesService.getCategories(from, size)
+                .stream()
+                .map(CategoryMapper::mapCategoriesToCategoryDto)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/{catId}")
@@ -37,6 +42,8 @@ public class CategoryPublicController {
             description = "В случае, если категории с заданным id не найдено, возвращает статус код 404"
     )
     public CategoryDto getCategoryById(@PathVariable @Positive int catId) {
-        return categoriesService.getCategoryById(catId);
+        return CategoryMapper
+                .mapCategoriesToCategoryDto(categoriesService
+                        .getCategoryById(catId));
     }
 }

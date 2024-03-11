@@ -11,8 +11,10 @@ import ru.practicum.mapper.ParticipationRequestMapper;
 import ru.practicum.stats.dto.request.ParticipationRequestDto;
 import ru.practicum.service.RequestsService;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -30,7 +32,10 @@ public class RequestsPrivateController {
             description = "В случае, если по заданным фильтрам не найдено ни одной заявки, возвращает пустой список"
     )
     public List<ParticipationRequestDto> getRequestsByUser(@PathVariable @Positive Integer userId) {
-        return requestsService.getRequestsByUser(userId);
+        return requestsService.getRequestsByUser(userId)
+                .stream()
+                .map(ParticipationRequestMapper::mapParticipationRequestToParticipationRequestDto)
+                .collect(Collectors.toList());
     }
 
     @PostMapping
@@ -44,8 +49,8 @@ public class RequestsPrivateController {
                     "- если у события достигнут лимит запросов на участие - необходимо вернуть ошибку  (Ожидается код ошибки 409)\n" +
                     "- если для события отключена пре-модерация запросов на участие, то запрос должен автоматически перейти в состояние подтвержденного"
     )
-    public ParticipationRequestDto createRequest(@PathVariable @Positive Integer userId,
-                                                 @RequestParam @Positive Integer eventId) {
+    public ParticipationRequestDto createRequest(@PathVariable Integer userId,
+                                                 @Valid @RequestParam Integer eventId) {
         return ParticipationRequestMapper
                 .mapParticipationRequestToParticipationRequestDto(requestsService
                         .createRequest(userId, eventId));

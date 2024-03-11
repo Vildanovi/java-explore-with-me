@@ -1,4 +1,4 @@
-package ru.practicum.stats.dto.Locations;
+package ru.practicum.stats.dto.locations;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;

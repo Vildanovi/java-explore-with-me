@@ -29,7 +29,8 @@ public class HitService {
 
     public List<ViewStats> getStats(LocalDateTime startDate, LocalDateTime endDate, List<String> uris, Boolean isUnique) {
         List<ViewStats> stats;
-        if (startDate.equals(endDate) || endDate.isBefore(startDate)) {
+//        if (startDate.equals(endDate) || endDate.isBefore(startDate))
+        if (endDate.isBefore(startDate)) {
             throw new BadRequestException("Некорректные даты");
         }
         if (uris != null) {

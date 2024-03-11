@@ -2,7 +2,7 @@ package ru.practicum.mapper;
 
 import lombok.experimental.UtilityClass;
 import ru.practicum.model.enumerations.StateEvent;
-import ru.practicum.stats.dto.Locations.LocationDto;
+import ru.practicum.stats.dto.locations.LocationDto;
 import ru.practicum.stats.dto.event.EventFullDto;
 import ru.practicum.stats.dto.event.EventShortDto;
 import ru.practicum.stats.dto.event.NewEventDto;
@@ -38,6 +38,8 @@ public class EventMapper {
                 .initiator(UserMapper.mapUsersToUserShortDto(event.getInitiator()))
                 .paid(event.isPaid())
                 .title(event.getTitle())
+                .views(event.getViews())
+                .confirmedRequests(event.getConfirmedRequest())
                 .build();
     }
 
@@ -60,6 +62,8 @@ public class EventMapper {
                 .requestModeration(event.isRequestModeration())
                 .state(event.getState())
                 .title(event.getTitle())
+                .views(event.getViews())
+                .confirmedRequests(event.getConfirmedRequest())
                 .build();
     }
 }

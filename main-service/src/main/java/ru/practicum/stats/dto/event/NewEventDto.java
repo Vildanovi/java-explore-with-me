@@ -7,7 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.practicum.constant.Constants;
-import ru.practicum.stats.dto.Locations.LocationDto;
+import ru.practicum.stats.dto.locations.LocationDto;
 
 import javax.validation.constraints.*;
 import java.time.LocalDateTime;
@@ -52,5 +52,5 @@ public class NewEventDto {
             description = "Нужна ли пре-модерация заявок на участие. Если true, " +
                     "то все заявки будут ожидать подтверждения инициатором события. " +
                     "Если false - то будут подтверждаться автоматически.")
-    private boolean requestModeration;
+    private boolean requestModeration = true;
 }

@@ -12,7 +12,7 @@ public class ErrorHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handlerEntityUpdateException(final BadRequestException exception) {
+    public ErrorResponse handlerBadRequestException(final BadRequestException exception) {
         log.error("Получен статус 400 Internal Server Error {}", exception.getMessage(), exception);
         return new ErrorResponse(exception.getMessage());
     }
