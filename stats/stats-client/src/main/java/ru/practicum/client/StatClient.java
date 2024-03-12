@@ -51,6 +51,16 @@ public class StatClient {
         return restTemplate.exchange("/stats?start={start}&end={end}&uris={uris}&unique={unique}",
                     HttpMethod.GET, null, typeRef, parameters).getBody();
     }
+
+    public List<ViewStatsDto> getUnique(Collection<String> uris) {
+        ParameterizedTypeReference<List<ViewStatsDto>> typeRef = new ParameterizedTypeReference<>() {
+        };
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put("uris", String.join(",", uris));
+
+        return restTemplate.exchange("/unique?uris={uris}",
+                HttpMethod.GET, null, typeRef, parameters).getBody();
+    }
 }
 
 

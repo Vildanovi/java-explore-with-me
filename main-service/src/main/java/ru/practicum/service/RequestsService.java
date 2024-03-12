@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
-import ru.practicum.exception.BadRequestException;
 import ru.practicum.exception.EntityNotFoundException;
 import ru.practicum.exception.ValidationBadRequestException;
 import ru.practicum.model.Event;
@@ -39,15 +38,20 @@ public class RequestsService {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("Объект %d не найден", eventId)));
 
+        List<ParticipationRequest> requests = participationRequestRepository.findAllByRequesterIdAndEventId(userId, eventId);
+        if (!requests.isEmpty()) {
+            throw new ValidationBadRequestException(String
+                    .format("Заявка пользователя %d уже существует для события %d", userId, eventId));
+        }
         if (userId.equals(event.getInitiator().getId())) {
-            throw new BadRequestException("Инициатор события не может добавить запрос");
+            throw new ValidationBadRequestException("Инициатор события не может добавить запрос");
         }
         if (!event.getState().equals(StateEvent.PUBLISHED)) {
-            throw new BadRequestException("Нельзя участвовать в неопубликованном событии");
+            throw new ValidationBadRequestException("Нельзя участвовать в неопубликованном событии");
         }
         if (event.getParticipantLimit() != 0 &&
                 event.getParticipantLimit() == getEventConfirmedRequests(eventId)) {
-            throw new BadRequestException("Достигнут лимит запросов на участие");
+            throw new ValidationBadRequestException("Достигнут лимит запросов на участие");
         }
 
         ParticipationRequest participationRequest;

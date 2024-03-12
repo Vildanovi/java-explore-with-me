@@ -41,9 +41,9 @@ public class UsersAdminController {
             description = "Возвращает информацию обо всех пользователях (учитываются параметры ограничения выборки), либо о конкретных (учитываются указанные идентификаторы).\n" +
                     "В случае, если по заданным фильтрам не найдено ни одного пользователя, возвращает пустой список"
     )
-    public List<UserDto> getUsers(@RequestParam List<Integer> ids,
-                                  @RequestParam(defaultValue = "0") int from,
-                                  @RequestParam(defaultValue = "10") int size) {
+    public List<UserDto> getUsers(@RequestParam(required = false) List<Integer> ids,
+                                  @RequestParam(required = false, defaultValue = "0") int from,
+                                  @RequestParam(required = false, defaultValue = "10") int size) {
         return usersService.getUsers(ids, from, size)
                 .stream()
                 .map(UserMapper::mapUsersToUserDto)

@@ -4,8 +4,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.constant.Constants;
 import ru.practicum.stats.dto.event.EventFullDto;
 import ru.practicum.stats.dto.event.UpdateEventAdminRequest;
 import ru.practicum.mapper.EventMapper;
@@ -14,7 +16,6 @@ import ru.practicum.service.EventsService;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
-import javax.validation.constraints.PositiveOrZero;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,8 +38,8 @@ public class EventsAdminController {
     public List<EventFullDto> getEvents(@RequestParam(required = false) List<Integer> users,
                                         @RequestParam(required = false) List<StateEvent> states,
                                         @RequestParam(required = false) List<Integer> categories,
-                                        @RequestParam(required = false) LocalDateTime rangeStart,
-                                        @RequestParam(required = false) LocalDateTime rangeEnd,
+                                        @RequestParam(required = false) @DateTimeFormat(pattern = Constants.DATE_PATTERN) LocalDateTime rangeStart,
+                                        @RequestParam(required = false) @DateTimeFormat(pattern = Constants.DATE_PATTERN) LocalDateTime rangeEnd,
                                         @RequestParam(required = false, defaultValue = "0") int from,
                                         @RequestParam(required = false, defaultValue = "10") int size) {
         return eventsService.getEvents(users, states, categories, rangeStart, rangeEnd, from, size)

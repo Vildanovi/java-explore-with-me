@@ -29,6 +29,9 @@ public class CategoriesService {
 
     @Transactional
     public Category createCategory(Category category) {
+        if (categoryRepository.existCategoryName(category.getName())) {
+            throw new ValidationBadRequestException("Имя должно быть уникальным");
+        }
         return categoryRepository.save(category);
     }
 
@@ -47,8 +50,18 @@ public class CategoriesService {
     public Category updateCategory(int catId, NewCategoryDto newCategoryDto) {
         Category updateCategory = categoryRepository.findById(catId)
                 .orElseThrow(() -> new EntityNotFoundException("Объект не найден: " + catId));
-        updateCategory.setName(newCategoryDto.getName());
-        return updateCategory;
+        if (newCategoryDto.getName().equals(updateCategory.getName())) {
+            return updateCategory;
+        }
+        if (categoryRepository.existUniqueName(newCategoryDto.getName())) {
+            throw new ValidationBadRequestException("Имя должно быть уникальным");
+        } else {
+            updateCategory.setName(newCategoryDto.getName());
+            return updateCategory;
+        }
+//        if (categoryRepository.existCategoryName(updateCategory.getName())) {
+//            throw new ValidationBadRequestException("Имя должно быть уникальным");
+//        }
     }
 
     public List<Category> getCategories(Integer from, Integer size) {

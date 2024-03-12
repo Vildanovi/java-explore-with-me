@@ -36,12 +36,25 @@ public class StatsController {
     @Operation(summary = "Получение статистики по посещениям.")
     public List<ViewStatsDto> getStats(@RequestParam(name = "start") @DateTimeFormat(pattern = Constants.DATE_PATTERN) LocalDateTime start,
                                        @RequestParam(name = "end")  @DateTimeFormat(pattern = Constants.DATE_PATTERN) LocalDateTime end,
-                                       @RequestParam(name = "uris", required = false) List<String> uris,
+                                       @RequestParam(name = "uris") List<String> uris,
                                        @RequestParam(name = "unique", defaultValue = "false") Boolean unique) {
         log.debug("Получаем статистику для uris: {} start: {} end: {} unique: {}", uris, start, end, unique);
+
         return hitService.getStats(start, end, uris, unique)
-                .stream()
-                .map(HitMapper::mapStatsToViewStatsDto)
-                .collect(Collectors.toList());
+                    .stream()
+                    .map(HitMapper::mapStatsToViewStatsDto)
+                    .collect(Collectors.toList());
     }
+
+    @GetMapping("/unique")
+    @Operation(summary = "Получение статистики по посещениям.")
+    public List<ViewStatsDto> getUnique(@RequestParam(name = "uris") List<String> uris) {
+        log.debug("Получаем статистику для uris: {}", uris);
+        return hitService.getUnique(uris)
+                    .stream()
+                    .map(HitMapper::mapStatsToViewStatsDto)
+                    .collect(Collectors.toList());
+    }
+
+
 }

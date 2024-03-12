@@ -30,7 +30,7 @@ public class HitService {
     public List<ViewStats> getStats(LocalDateTime startDate, LocalDateTime endDate, List<String> uris, Boolean isUnique) {
         List<ViewStats> stats;
 //        if (startDate.equals(endDate) || endDate.isBefore(startDate))
-        if (endDate.isBefore(startDate)) {
+        if (endDate != null && startDate != null && endDate.isBefore(startDate)) {
             throw new BadRequestException("Некорректные даты");
         }
         if (uris != null) {
@@ -47,5 +47,9 @@ public class HitService {
             }
         }
         return stats;
+    }
+
+    public List<ViewStats> getUnique(List<String> uris) {
+        return hitRepository.queryDistinctByUriIn(uris);
     }
 }

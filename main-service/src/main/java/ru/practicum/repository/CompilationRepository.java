@@ -13,7 +13,4 @@ import java.util.List;
 public interface CompilationRepository extends JpaRepository<Compilation, Integer>, QuerydslPredicateExecutor<Compilation> {
 
     List<Compilation> findAllByPinnedIs(boolean pinned, Pageable page);
-
-    Page<Compilation> findAll(Pageable page);
-
 }

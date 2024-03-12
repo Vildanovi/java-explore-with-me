@@ -11,7 +11,6 @@ import ru.practicum.mapper.ParticipationRequestMapper;
 import ru.practicum.stats.dto.request.ParticipationRequestDto;
 import ru.practicum.service.RequestsService;
 
-import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -50,7 +49,7 @@ public class RequestsPrivateController {
                     "- если для события отключена пре-модерация запросов на участие, то запрос должен автоматически перейти в состояние подтвержденного"
     )
     public ParticipationRequestDto createRequest(@PathVariable Integer userId,
-                                                 @Valid @RequestParam Integer eventId) {
+                                                 @RequestParam Integer eventId) {
         return ParticipationRequestMapper
                 .mapParticipationRequestToParticipationRequestDto(requestsService
                         .createRequest(userId, eventId));

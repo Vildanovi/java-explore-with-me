@@ -231,17 +231,21 @@ public class EventsService {
                 .orElseThrow(() -> new EntityNotFoundException("Объект не найден: " + userId));
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new EntityNotFoundException("Объект не найден: " + eventId));
+        List<ParticipationRequest> confirmedRequests = new ArrayList<>();
+        List<ParticipationRequest> rejectedRequests = new ArrayList<>();
+        List<ParticipationRequest> requestsData = participationRequestRepository.findAllByIdIn(eventRequestStatusUpdateRequest.getRequestIds());
+
         List<ParticipationRequestDto> participationRequests = participationRequestRepository
                 .findAllByIdIn(eventRequestStatusUpdateRequest.getRequestIds())
                 .stream()
                 .map(ParticipationRequestMapper::mapParticipationRequestToParticipationRequestDto)
                 .collect(Collectors.toList());
-        participationRequests
-                .stream()
-                .filter(request -> request.getStatus().equals(RequestStatus.PENDING))
-                .forEach(request -> {
-                    throw new ValidationBadRequestException("Cтатус можно изменить только у заявок, находящихся в состоянии ожидания");
-                });
+
+        for (ParticipationRequestDto request : participationRequests) {
+            if (!request.getStatus().equals(RequestStatus.PENDING)) {
+                throw new ValidationBadRequestException("Cтатус можно изменить только у заявок, находящихся в состоянии ожидания");
+            }
+        }
 
         EventRequestStatusUpdateResult eventRequestStatusUpdateResult = EventRequestStatusUpdateResult
                 .builder()
@@ -249,38 +253,82 @@ public class EventsService {
                 .rejectedRequests(new ArrayList<>())
                 .build();
 
-        if (!event.isRequestModeration() || event.getParticipantLimit() == 0) {
-            eventRequestStatusUpdateResult
-                    .getConfirmedRequests()
-                    .addAll(participationRequests);
-        }
+//        if (!event.isRequestModeration() || event.getParticipantLimit() == 0) {
+//            eventRequestStatusUpdateResult
+//                    .getConfirmedRequests()
+//                    .addAll(participationRequests);
+//        }
+//
+//        int eventConfirmedRequests = requestsService.getEventConfirmedRequests(eventId);
+//        if (event.getParticipantLimit() == eventConfirmedRequests) {
+//            throw new ValidationBadRequestException(String
+//                    .format("Достигнут лимит %d по заявкам на событие %d", eventConfirmedRequests, eventId));
+//        }
+//
+//        if (eventRequestStatusUpdateRequest.getStatus().equals(RequestStatus.REJECTED)) {
+//            participationRequests.forEach(requestDto -> requestDto.setStatus(RequestStatus.REJECTED));
+//            eventRequestStatusUpdateResult
+//                    .getRejectedRequests()
+//                    .addAll(participationRequests);
+//        }
+//        int limit = event.getParticipantLimit() - eventConfirmedRequests;
+//        for (ParticipationRequestDto requestDto : participationRequests) {
+//            if (limit > 0) {
+//                requestDto.setStatus(RequestStatus.CONFIRMED);
+//                eventRequestStatusUpdateResult.getConfirmedRequests().add(requestDto);
+//                --limit;
+//            } else {
+//                requestDto.setStatus(RequestStatus.REJECTED);
+//                eventRequestStatusUpdateResult.getRejectedRequests().add(requestDto);
+//            }
+//        }
 
         int eventConfirmedRequests = requestsService.getEventConfirmedRequests(eventId);
-        if (event.getParticipantLimit() == eventConfirmedRequests) {
-            throw new ValidationBadRequestException(String
-                    .format("Достигнут лимит %d по заявкам на событие %d", eventConfirmedRequests, eventId));
+        switch (eventRequestStatusUpdateRequest.getStatus()) {
+            case CONFIRMED:
+                if (event.getParticipantLimit() == 0 || !event.isRequestModeration()) {
+                    for (ParticipationRequest request : requestsData) {
+                        if (request.getStatus().equals(RequestStatus.CONFIRMED)) {
+                            throw new ValidationBadRequestException("Нельзя отменить подтвержденную заявку");
+                        }
+                    }
+                    requestsData.forEach(request -> request.setStatus(RequestStatus.CONFIRMED));
+                    confirmedRequests.addAll(requestsData);
+                } else if (event.getParticipantLimit() == eventConfirmedRequests) {
+                    throw new ValidationBadRequestException(String
+                            .format("Достигнут лимит %d по заявкам на событие %d", eventConfirmedRequests, eventId));
+                } else {
+                    for (ParticipationRequest request : requestsData) {
+                        if (event.getParticipantLimit() > eventConfirmedRequests) {
+                            request.setStatus(RequestStatus.CONFIRMED);
+                            confirmedRequests.add(request);
+                        } else {
+//                            if (request.getStatus().equals(RequestStatus.CONFIRMED)) {
+//                                throw new ValidationBadRequestException("Нельзя отменить подтвержденную заявку");
+//                            }
+                            request.setStatus(RequestStatus.REJECTED);
+                            rejectedRequests.add(request);
+                        }
+                    }
+                }
+                break;
+            case REJECTED:
+//                for (ParticipationRequestDto request : participationRequests) {
+//                    if (request.getStatus().equals(RequestStatus.CONFIRMED)) {
+//                        throw new ValidationBadRequestException("Нельзя отменить подтвержденную заявку");
+//                    }
+//                }
+                requestsData.forEach(request -> request.setStatus(RequestStatus.REJECTED));
+                rejectedRequests.addAll(requestsData);
         }
-
-        if (eventRequestStatusUpdateRequest.getStatus().equals(RequestStatus.REJECTED)) {
-            participationRequests.forEach(requestDto -> requestDto.setStatus(RequestStatus.REJECTED));
-            eventRequestStatusUpdateResult
-                    .getRejectedRequests()
-                    .addAll(participationRequests);
-        }
-
-
-        int limit = event.getParticipantLimit() - eventConfirmedRequests;
-
-        for (ParticipationRequestDto requestDto : participationRequests) {
-            if (limit > 0) {
-                requestDto.setStatus(RequestStatus.CONFIRMED);
-                eventRequestStatusUpdateResult.getConfirmedRequests().add(requestDto);
-                --limit;
-            } else {
-                requestDto.setStatus(RequestStatus.REJECTED);
-                eventRequestStatusUpdateResult.getRejectedRequests().add(requestDto);
-            }
-        }
+        eventRequestStatusUpdateResult.
+                setConfirmedRequests(confirmedRequests.stream()
+                        .map(ParticipationRequestMapper::mapParticipationRequestToParticipationRequestDto)
+                        .collect(Collectors.toList()));
+        eventRequestStatusUpdateResult
+                .setRejectedRequests(rejectedRequests.stream()
+                        .map(ParticipationRequestMapper::mapParticipationRequestToParticipationRequestDto)
+                        .collect(Collectors.toList()));
         return eventRequestStatusUpdateResult;
     }
 
@@ -304,18 +352,18 @@ public class EventsService {
     public List<Event> getEvents(List<Integer> users, List<StateEvent> states, List<Integer> categories,
                                         LocalDateTime rangeStart, LocalDateTime rangeEnd, int from, int size) {
         List<Event> events;
-        Pageable pageable = new OffsetBasedPageRequest(from, size, Constants.SORT_DESC_ID);
+        Pageable pageable = new OffsetBasedPageRequest(from, size, Constants.SORT_ASC_ID);
         BooleanBuilder searchParam = new BooleanBuilder();
 
-        if (!users.isEmpty()) {
+        if (users != null) {
             BooleanExpression byUsersId = QEvent.event.initiator.id.in(users);
             searchParam.and(byUsersId);
         }
-        if (!states.isEmpty()) {
+        if (states != null) {
             BooleanExpression byStates = QEvent.event.state.in(states);
             searchParam.and(byStates);
         }
-        if (!categories.isEmpty()) {
+        if (categories != null) {
             BooleanExpression byCategory = QEvent.event.category.id.in(categories);
             searchParam.and(byCategory);
         }
@@ -335,7 +383,9 @@ public class EventsService {
         } else {
             events = eventRepository.findAll(searchParam.and(byEventDate), pageable).getContent();
         }
-//        setHitsAndRequests(events);
+
+        setHitsAndRequests(events);
+
         return events;
     }
 
@@ -408,7 +458,7 @@ public class EventsService {
         if (!event.getState().equals(StateEvent.PUBLISHED)) {
             throw new EntityNotFoundException("Не найдено событие со статусом опубликовано");
         }
-//        setHitsAndRequests(List.of(event));
+        setHitsAndRequests(List.of(event));
         return event;
     }
 
@@ -425,8 +475,7 @@ public class EventsService {
                 .map(id -> String.format("/events/%d", id))
                 .collect(Collectors.toList());
         List<ViewStatsDto> stats = statClient
-                .getStats(LocalDateTime.parse(LocalDateTime.now().minusYears(10).format(Constants.FORMATTER)),
-                        LocalDateTime.parse(LocalDateTime.now().format(Constants.FORMATTER)), uris, true);
+                .getUnique(uris);
 
         Map<Integer, Integer> hits = new HashMap<>();
         for (ViewStatsDto stat : stats) {
@@ -446,11 +495,20 @@ public class EventsService {
             event.setViews(hits.getOrDefault(event.getId(), 0));
         }
 
-        Map<Integer, Integer> confirmedRequests = participationRequestRepository
-                .findAllConfirmedRequestsByEventIds(ids, RequestStatus.CONFIRMED);
+//        Map<Integer, Integer> confirmedRequests = participationRequestRepository
+//                .findAllConfirmedRequestsByEventIds(ids, RequestStatus.CONFIRMED);
+//
+//        Map<Integer, Integer> c = participationRequestRepository.findByEventAndStartAndEnd(ids, RequestStatus.CONFIRMED);
+
+        List<ParticipationRequest> r = participationRequestRepository.findByEvent_IdInAndStatus(ids, RequestStatus.CONFIRMED);
+
+        Map<Integer, Integer> confirmed = r.stream()
+                .collect(Collectors.groupingBy(obj -> obj.getEvent().getId(),
+                        Collectors.summingInt(id -> 1)));
+
 
         for (Event event : events) {
-            event.setConfirmedRequest(confirmedRequests
+            event.setConfirmedRequest(confirmed
                     .getOrDefault(event.getId(), 0));
         }
     }
