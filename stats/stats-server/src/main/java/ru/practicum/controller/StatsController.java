@@ -55,6 +55,4 @@ public class StatsController {
                     .map(HitMapper::mapStatsToViewStatsDto)
                     .collect(Collectors.toList());
     }
-
-
 }

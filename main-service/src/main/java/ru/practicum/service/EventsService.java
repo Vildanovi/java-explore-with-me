@@ -253,36 +253,6 @@ public class EventsService {
                 .rejectedRequests(new ArrayList<>())
                 .build();
 
-//        if (!event.isRequestModeration() || event.getParticipantLimit() == 0) {
-//            eventRequestStatusUpdateResult
-//                    .getConfirmedRequests()
-//                    .addAll(participationRequests);
-//        }
-//
-//        int eventConfirmedRequests = requestsService.getEventConfirmedRequests(eventId);
-//        if (event.getParticipantLimit() == eventConfirmedRequests) {
-//            throw new ValidationBadRequestException(String
-//                    .format("Достигнут лимит %d по заявкам на событие %d", eventConfirmedRequests, eventId));
-//        }
-//
-//        if (eventRequestStatusUpdateRequest.getStatus().equals(RequestStatus.REJECTED)) {
-//            participationRequests.forEach(requestDto -> requestDto.setStatus(RequestStatus.REJECTED));
-//            eventRequestStatusUpdateResult
-//                    .getRejectedRequests()
-//                    .addAll(participationRequests);
-//        }
-//        int limit = event.getParticipantLimit() - eventConfirmedRequests;
-//        for (ParticipationRequestDto requestDto : participationRequests) {
-//            if (limit > 0) {
-//                requestDto.setStatus(RequestStatus.CONFIRMED);
-//                eventRequestStatusUpdateResult.getConfirmedRequests().add(requestDto);
-//                --limit;
-//            } else {
-//                requestDto.setStatus(RequestStatus.REJECTED);
-//                eventRequestStatusUpdateResult.getRejectedRequests().add(requestDto);
-//            }
-//        }
-
         int eventConfirmedRequests = requestsService.getEventConfirmedRequests(eventId);
         switch (eventRequestStatusUpdateRequest.getStatus()) {
             case CONFIRMED:
@@ -303,9 +273,6 @@ public class EventsService {
                             request.setStatus(RequestStatus.CONFIRMED);
                             confirmedRequests.add(request);
                         } else {
-//                            if (request.getStatus().equals(RequestStatus.CONFIRMED)) {
-//                                throw new ValidationBadRequestException("Нельзя отменить подтвержденную заявку");
-//                            }
                             request.setStatus(RequestStatus.REJECTED);
                             rejectedRequests.add(request);
                         }
@@ -313,16 +280,11 @@ public class EventsService {
                 }
                 break;
             case REJECTED:
-//                for (ParticipationRequestDto request : participationRequests) {
-//                    if (request.getStatus().equals(RequestStatus.CONFIRMED)) {
-//                        throw new ValidationBadRequestException("Нельзя отменить подтвержденную заявку");
-//                    }
-//                }
                 requestsData.forEach(request -> request.setStatus(RequestStatus.REJECTED));
                 rejectedRequests.addAll(requestsData);
         }
-        eventRequestStatusUpdateResult.
-                setConfirmedRequests(confirmedRequests.stream()
+        eventRequestStatusUpdateResult
+                .setConfirmedRequests(confirmedRequests.stream()
                         .map(ParticipationRequestMapper::mapParticipationRequestToParticipationRequestDto)
                         .collect(Collectors.toList()));
         eventRequestStatusUpdateResult
@@ -335,7 +297,6 @@ public class EventsService {
     public List<Event> getAllEventsByUser(Integer userId, int from, int size) {
         Pageable pageable = new OffsetBasedPageRequest(from, size, Constants.SORT_DESC_ID);
         List<Event> events = eventRepository.findAllByInitiatorId(userId, pageable);
-//        setHitsAndRequests(events);
         return events;
     }
 
@@ -344,7 +305,6 @@ public class EventsService {
         event = eventRepository.findByIdAndInitiator_Id(eventId, userId)
                 .orElseThrow(() -> new EntityNotFoundException(String
                         .format("Событие %d инициатора %d не найдено", eventId, userId)));
-//        setHitsAndRequests(List.of(event));
         return event;
     }
 
@@ -446,7 +406,6 @@ public class EventsService {
                     .filter(event -> event.getConfirmedRequest() != event.getParticipantLimit())
                     .collect(Collectors.toList());
         }
-//        setHitsAndRequests(events);
         return events;
     }
 
@@ -494,11 +453,6 @@ public class EventsService {
         for (Event event : events) {
             event.setViews(hits.getOrDefault(event.getId(), 0));
         }
-
-//        Map<Integer, Integer> confirmedRequests = participationRequestRepository
-//                .findAllConfirmedRequestsByEventIds(ids, RequestStatus.CONFIRMED);
-//
-//        Map<Integer, Integer> c = participationRequestRepository.findByEventAndStartAndEnd(ids, RequestStatus.CONFIRMED);
 
         List<ParticipationRequest> r = participationRequestRepository.findByEvent_IdInAndStatus(ids, RequestStatus.CONFIRMED);
 

@@ -59,9 +59,6 @@ public class CategoriesService {
             updateCategory.setName(newCategoryDto.getName());
             return updateCategory;
         }
-//        if (categoryRepository.existCategoryName(updateCategory.getName())) {
-//            throw new ValidationBadRequestException("Имя должно быть уникальным");
-//        }
     }
 
     public List<Category> getCategories(Integer from, Integer size) {

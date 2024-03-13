@@ -37,6 +37,7 @@ services:
       - ewm-db
       - stats-server
     environment:
+      - STATS_SERVER_URL=http://stats-server:9090
       - DB_HOST=ewm-db
       - DB_PORT=5432
       - DB_NAME=ewm-db
