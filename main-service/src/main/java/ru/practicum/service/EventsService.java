@@ -312,7 +312,7 @@ public class EventsService {
     public List<Event> getEvents(List<Integer> users, List<StateEvent> states, List<Integer> categories,
                                         LocalDateTime rangeStart, LocalDateTime rangeEnd, int from, int size) {
         List<Event> events;
-        Pageable pageable = new OffsetBasedPageRequest(from, size, Constants.SORT_ASC_ID);
+        Pageable pageable = new OffsetBasedPageRequest(from, size, Constants.SORT_DESC_ID);
         BooleanBuilder searchParam = new BooleanBuilder();
 
         if (users != null) {
