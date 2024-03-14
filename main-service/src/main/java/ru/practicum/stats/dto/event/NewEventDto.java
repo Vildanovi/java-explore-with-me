@@ -6,9 +6,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import ru.practicum.constant.Constants;
 import ru.practicum.stats.dto.locations.LocationDto;
 
+import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.time.LocalDateTime;
 
@@ -16,6 +18,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Validated
 @Schema(description = "Новое событие")
 public class NewEventDto {
     @NotBlank
@@ -41,6 +44,7 @@ public class NewEventDto {
                     "Дата и время указываются в формате \"yyyy-MM-dd HH:mm:ss\"")
     private LocalDateTime eventDate;
     @NotNull
+    @Valid
     private LocationDto location;
     @Schema(example = "true", defaultValue = "false", description = "Нужно ли оплачивать участие в событии")
     private boolean paid;

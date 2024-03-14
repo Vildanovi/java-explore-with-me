@@ -45,14 +45,4 @@ public class StatsController {
                     .map(HitMapper::mapStatsToViewStatsDto)
                     .collect(Collectors.toList());
     }
-
-    @GetMapping("/unique")
-    @Operation(summary = "Получение статистики по посещениям.")
-    public List<ViewStatsDto> getUnique(@RequestParam(name = "uris") List<String> uris) {
-        log.debug("Получаем статистику для uris: {}", uris);
-        return hitService.getUnique(uris)
-                    .stream()
-                    .map(HitMapper::mapStatsToViewStatsDto)
-                    .collect(Collectors.toList());
-    }
 }

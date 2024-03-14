@@ -41,7 +41,6 @@ public class Event {
     @Column(name = "request_moderation")
     private boolean requestModeration;
     @Enumerated(EnumType.STRING)
-//    @Builder.Default
     @Column(nullable = false)
     private StateEvent state;
     @Transient

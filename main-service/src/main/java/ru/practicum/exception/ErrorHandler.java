@@ -61,4 +61,18 @@ public class ErrorHandler {
                         .format(DateTimeFormatter.ofPattern(Constants.DATE_PATTERN)))
                 .build();
     }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ApiError handlerException(final Throwable exception) {
+        log.error("Получен статус 500 Internal Server Error {}", exception.getMessage());
+        return ApiError.builder()
+                .errors(Arrays.toString(exception.getStackTrace()))
+                .status(HttpStatus.INTERNAL_SERVER_ERROR.toString())
+                .reason("Внутренняя ошибка сервера")
+                .message(exception.getMessage())
+                .timestamp(LocalDateTime.now()
+                        .format(DateTimeFormatter.ofPattern(Constants.DATE_PATTERN)))
+                .build();
+    }
 }

@@ -6,11 +6,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.mapper.ParticipationRequestMapper;
 import ru.practicum.stats.dto.request.ParticipationRequestDto;
 import ru.practicum.service.RequestsService;
 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,6 +20,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
+@Validated
 @RequestMapping(path = "/users/{userId}/requests", produces = MediaType.APPLICATION_JSON_VALUE)
 @Tag(name = "Private: Запросы на участие", description = "Закрытый API для работы с " +
         "запросами текущего пользователя на участие в событиях")
@@ -48,8 +51,8 @@ public class RequestsPrivateController {
                     "- если у события достигнут лимит запросов на участие - необходимо вернуть ошибку  (Ожидается код ошибки 409)\n" +
                     "- если для события отключена пре-модерация запросов на участие, то запрос должен автоматически перейти в состояние подтвержденного"
     )
-    public ParticipationRequestDto createRequest(@PathVariable Integer userId,
-                                                 @RequestParam Integer eventId) {
+    public ParticipationRequestDto createRequest(@PathVariable @Positive Integer userId,
+                                                 @RequestParam(required = false) @NotNull Integer eventId) {
         return ParticipationRequestMapper
                 .mapParticipationRequestToParticipationRequestDto(requestsService
                         .createRequest(userId, eventId));

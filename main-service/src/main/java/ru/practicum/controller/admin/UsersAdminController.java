@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.stats.dto.user.NewUserRequest;
 import ru.practicum.stats.dto.user.UserDto;
@@ -15,12 +16,14 @@ import ru.practicum.service.UsersService;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
 @RequiredArgsConstructor
+@Validated
 @RequestMapping(path = "/admin/users", produces = MediaType.APPLICATION_JSON_VALUE)
 @Tag(name = "Admin: Пользователи", description = "API для работы с пользователями")
 public class UsersAdminController {
@@ -42,8 +45,8 @@ public class UsersAdminController {
                     "В случае, если по заданным фильтрам не найдено ни одного пользователя, возвращает пустой список"
     )
     public List<UserDto> getUsers(@RequestParam(required = false) List<Integer> ids,
-                                  @RequestParam(required = false, defaultValue = "0") int from,
-                                  @RequestParam(required = false, defaultValue = "10") int size) {
+                                  @RequestParam(defaultValue = "0") @PositiveOrZero int from,
+                                  @RequestParam(defaultValue = "10") @Positive int size) {
         return usersService.getUsers(ids, from, size)
                 .stream()
                 .map(UserMapper::mapUsersToUserDto)

@@ -62,7 +62,7 @@ public class CompilationsService {
         }
         String tittle = updateCompilationRequest.getTitle();
         Boolean pinned = updateCompilationRequest.getPinned();
-        if (tittle != null) {
+        if (tittle != null && !tittle.isBlank()) {
             compilation.setTitle(tittle);
         }
         if (pinned != null) {

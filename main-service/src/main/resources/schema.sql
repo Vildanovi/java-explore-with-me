@@ -28,8 +28,8 @@ CREATE TABLE IF NOT EXISTS events
     request_moderation BOOLEAN                                          NOT NULL,
     title              VARCHAR(120)                                     NOT NULL,
     state              VARCHAR(50)                                      NOT NULL,
-    views              INTEGER,
-    confirmedRequest   INTEGER,
+--     views              INTEGER,
+--     confirmedRequest   INTEGER,
     CONSTRAINT FK_EVENT_CATEGORY FOREIGN KEY (category) REFERENCES category (id),
     CONSTRAINT FK_EVENT_INITIATOR FOREIGN KEY (initiator) REFERENCES users (id)
 );

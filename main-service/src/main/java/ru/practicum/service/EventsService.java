@@ -24,11 +24,11 @@ import ru.practicum.stats.dto.request.ParticipationRequestDto;
 import ru.practicum.exception.EntityNotFoundException;
 import ru.practicum.exception.ValidationBadRequestException;
 import ru.practicum.mapper.EventMapper;
-import ru.practicum.model.enumerations.StateAction;
 import ru.practicum.model.enumerations.StateEvent;
 import ru.practicum.repository.CategoryRepository;
 import ru.practicum.repository.EventRepository;
 import ru.practicum.repository.UserRepository;
+import ru.practicum.stats.dto.request.RequestConfirmedCountDto;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -71,7 +71,7 @@ public class EventsService {
     @Transactional
     public Event updateEventById(int eventId, UpdateEventAdminRequest updateEventAdminRequest) {
         LocalDateTime eventDate = updateEventAdminRequest.getEventDate();
-        StateAction state;
+        UpdateEventAdminRequest.StateAction state;
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new EntityNotFoundException("Объект не найден: " + eventId));
         if (eventDate != null) {
@@ -84,7 +84,7 @@ public class EventsService {
 
         if (updateEventAdminRequest.getStateAction() != null) {
             try {
-                state = StateAction.valueOf(updateEventAdminRequest.getStateAction());
+                state = UpdateEventAdminRequest.StateAction.valueOf(updateEventAdminRequest.getStateAction());
             } catch (IllegalArgumentException e) {
                 throw new ValidationBadRequestException("Неизвестный параметр " + updateEventAdminRequest.getStateAction());
             }
@@ -108,40 +108,7 @@ public class EventsService {
             }
         }
 
-        Integer categoryId = updateEventAdminRequest.getCategory();
-        if (categoryId != null) {
-            event.setCategory(getCategoryOrException(categoryId));
-        }
-
-        String annotation = updateEventAdminRequest.getAnnotation();
-        String description = updateEventAdminRequest.getDescription();
-        LocationDto location = updateEventAdminRequest.getLocation();
-        Boolean paid = updateEventAdminRequest.getPaid();
-        Integer participantLimit = updateEventAdminRequest.getParticipantLimit();
-        Boolean requestModeration = updateEventAdminRequest.getRequestModeration();
-        String title = updateEventAdminRequest.getTitle();
-        if (annotation != null) {
-            event.setAnnotation(annotation);
-        }
-        if (description != null) {
-            event.setDescription(description);
-        }
-        if (location != null) {
-            event.setLon(location.getLon());
-            event.setLat(location.getLat());
-        }
-        if (paid != null) {
-            event.setPaid(paid);
-        }
-        if (participantLimit != null) {
-            event.setParticipantLimit(participantLimit);
-        }
-        if (requestModeration != null) {
-            event.setRequestModeration(requestModeration);
-        }
-        if (title != null) {
-            event.setTitle(title);
-        }
+        setUpdate(event, updateEventAdminRequest);
         return event;
     }
 
@@ -149,7 +116,7 @@ public class EventsService {
     @Transactional
     public Event updateEventByUser(Integer userId, Integer eventId, UpdateEventUserRequest updateEventUserRequest) {
         LocalDateTime eventDate = updateEventUserRequest.getEventDate();
-        StateAction state;
+        UpdateEventUserRequest.StateAction state;
         Event event;
         event = eventRepository.findByIdAndInitiator_Id(eventId, userId)
                 .orElseThrow(() -> new EntityNotFoundException(String
@@ -169,7 +136,8 @@ public class EventsService {
 
         if (updateEventUserRequest.getStateAction() != null) {
             try {
-                state = StateAction.valueOf(updateEventUserRequest.getStateAction());
+//                state = StateAction.valueOf(updateEventUserRequest.getStateAction());
+                state = UpdateEventUserRequest.StateAction.valueOf(updateEventUserRequest.getStateAction());
             } catch (IllegalArgumentException e) {
                 throw new ValidationBadRequestException("Неизвестный параметр " + updateEventUserRequest.getStateAction());
             }
@@ -185,41 +153,7 @@ public class EventsService {
             }
         }
 
-        Integer categoryId = updateEventUserRequest.getCategory();
-        if (categoryId != null) {
-            event.setCategory(getCategoryOrException(categoryId));
-        }
-
-        String annotation = updateEventUserRequest.getAnnotation();
-        String description = updateEventUserRequest.getDescription();
-        LocationDto location = updateEventUserRequest.getLocation();
-        Boolean paid = updateEventUserRequest.getPaid();
-        Integer participantLimit = updateEventUserRequest.getParticipantLimit();
-        Boolean requestModeration = updateEventUserRequest.getRequestModeration();
-        String title = updateEventUserRequest.getTitle();
-
-        if (annotation != null) {
-            event.setAnnotation(annotation);
-        }
-        if (description != null) {
-            event.setDescription(description);
-        }
-        if (location != null) {
-            event.setLon(location.getLon());
-            event.setLat(location.getLat());
-        }
-        if (paid != null) {
-            event.setPaid(paid);
-        }
-        if (participantLimit != null) {
-            event.setParticipantLimit(participantLimit);
-        }
-        if (requestModeration != null) {
-            event.setRequestModeration(requestModeration);
-        }
-        if (title != null) {
-            event.setTitle(title);
-        }
+        setUpdate(event, updateEventUserRequest);
         return event;
     }
 
@@ -433,8 +367,7 @@ public class EventsService {
         List<String> uris = ids.stream()
                 .map(id -> String.format("/events/%d", id))
                 .collect(Collectors.toList());
-        List<ViewStatsDto> stats = statClient
-                .getUnique(uris);
+        List<ViewStatsDto> stats = statClient.getStats(LocalDateTime.now().minusYears(20), LocalDateTime.now(), uris, true);
 
         Map<Integer, Integer> hits = new HashMap<>();
         for (ViewStatsDto stat : stats) {
@@ -454,15 +387,17 @@ public class EventsService {
             event.setViews(hits.getOrDefault(event.getId(), 0));
         }
 
-        List<ParticipationRequest> r = participationRequestRepository.findByEvent_IdInAndStatus(ids, RequestStatus.CONFIRMED);
-
-        Map<Integer, Integer> confirmed = r.stream()
-                .collect(Collectors.groupingBy(obj -> obj.getEvent().getId(),
-                        Collectors.summingInt(id -> 1)));
-
+        List<RequestConfirmedCountDto> test2 = participationRequestRepository.findByEventAndStartAndEnd(ids, RequestStatus.CONFIRMED);
+        Map<Integer, Integer> test1 = test2.stream()
+                .map(obj -> {
+                            Integer id = obj.getEventId();
+                            Integer count = Integer.parseInt(String.valueOf(obj.getCount()));
+                            return new AbstractMap.SimpleEntry<>(id, count);
+                        })
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
         for (Event event : events) {
-            event.setConfirmedRequest(confirmed
+            event.setConfirmedRequest(test1
                     .getOrDefault(event.getId(), 0));
         }
     }
@@ -475,5 +410,43 @@ public class EventsService {
     private Category getCategoryOrException(Integer categoryId) {
         return categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new EntityNotFoundException("Объект не найден: " + categoryId));
+    }
+
+    private void setUpdate(Event event, UpdateEventRequest updateEvent) {
+        Integer categoryId = updateEvent.getCategory();
+        if (categoryId != null) {
+            event.setCategory(getCategoryOrException(categoryId));
+        }
+
+        String annotation = updateEvent.getAnnotation();
+        String description = updateEvent.getDescription();
+        LocationDto location = updateEvent.getLocation();
+        Boolean paid = updateEvent.getPaid();
+        Integer participantLimit = updateEvent.getParticipantLimit();
+        Boolean requestModeration = updateEvent.getRequestModeration();
+        String title = updateEvent.getTitle();
+
+        if (annotation != null && !annotation.isBlank()) {
+            event.setAnnotation(annotation);
+        }
+        if (description != null && !annotation.isBlank()) {
+            event.setDescription(description);
+        }
+        if (location != null) {
+            event.setLon(location.getLon());
+            event.setLat(location.getLat());
+        }
+        if (paid != null) {
+            event.setPaid(paid);
+        }
+        if (participantLimit != null) {
+            event.setParticipantLimit(participantLimit);
+        }
+        if (requestModeration != null) {
+            event.setRequestModeration(requestModeration);
+        }
+        if (title != null && !annotation.isBlank()) {
+            event.setTitle(title);
+        }
     }
 }

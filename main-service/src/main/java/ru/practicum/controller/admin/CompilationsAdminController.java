@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.stats.dto.compilations.CompilationDto;
 import ru.practicum.stats.dto.compilations.NewCompilationsDto;
@@ -19,6 +20,7 @@ import javax.validation.constraints.Positive;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
+@Validated
 @RequestMapping(path = "/admin/compilations", produces = MediaType.APPLICATION_JSON_VALUE)
 @Tag(name = "Admin: Подборки событий", description = "API для работы с подборками событий")
 public class CompilationsAdminController {

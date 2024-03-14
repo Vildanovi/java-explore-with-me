@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.mapper.CategoryMapper;
 import ru.practicum.stats.dto.category.CategoryDto;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
+@Validated
 @RequestMapping(path = "/categories")
 @Tag(name = "Public: Категории", description = "Публичный API для работы с категориями")
 public class CategoryPublicController {
