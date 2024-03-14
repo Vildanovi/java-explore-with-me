@@ -246,7 +246,7 @@ public class EventsService {
                                         LocalDateTime rangeStart, LocalDateTime rangeEnd, int from, int size) {
         List<Event> events;
 //        Pageable pageable = new OffsetBasedPageRequest(from, size, Constants.SORT_DESC_ID);
-        Pageable pageable = PageRequest.of(from / size, size, Constants.SORT_ASC_ID);
+        Pageable pageable = PageRequest.of(from / size, size, Constants.SORT_DESC_ID);
         BooleanBuilder searchParam = new BooleanBuilder();
 
         if (users != null) {
