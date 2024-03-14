@@ -3,6 +3,7 @@ package ru.practicum.service;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,7 +29,6 @@ import ru.practicum.model.enumerations.StateEvent;
 import ru.practicum.repository.CategoryRepository;
 import ru.practicum.repository.EventRepository;
 import ru.practicum.repository.UserRepository;
-import ru.practicum.stats.dto.request.RequestConfirmedCountDto;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -136,7 +136,6 @@ public class EventsService {
 
         if (updateEventUserRequest.getStateAction() != null) {
             try {
-//                state = StateAction.valueOf(updateEventUserRequest.getStateAction());
                 state = UpdateEventUserRequest.StateAction.valueOf(updateEventUserRequest.getStateAction());
             } catch (IllegalArgumentException e) {
                 throw new ValidationBadRequestException("Неизвестный параметр " + updateEventUserRequest.getStateAction());
@@ -246,7 +245,8 @@ public class EventsService {
     public List<Event> getEvents(List<Integer> users, List<StateEvent> states, List<Integer> categories,
                                         LocalDateTime rangeStart, LocalDateTime rangeEnd, int from, int size) {
         List<Event> events;
-        Pageable pageable = new OffsetBasedPageRequest(from, size, Constants.SORT_ASC_ID);
+//        Pageable pageable = new OffsetBasedPageRequest(from, size, Constants.SORT_DESC_ID);
+        Pageable pageable = PageRequest.of(from / size, size, Constants.SORT_ASC_ID);
         BooleanBuilder searchParam = new BooleanBuilder();
 
         if (users != null) {
@@ -387,8 +387,9 @@ public class EventsService {
             event.setViews(hits.getOrDefault(event.getId(), 0));
         }
 
-        List<RequestConfirmedCountDto> test2 = participationRequestRepository.findByEventAndStartAndEnd(ids, RequestStatus.CONFIRMED);
-        Map<Integer, Integer> test1 = test2.stream()
+        Map<Integer, Integer> confirmedRequests = participationRequestRepository
+                .findByEventAndStartAndEnd(ids, RequestStatus.CONFIRMED)
+                .stream()
                 .map(obj -> {
                             Integer id = obj.getEventId();
                             Integer count = Integer.parseInt(String.valueOf(obj.getCount()));
@@ -397,7 +398,7 @@ public class EventsService {
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
         for (Event event : events) {
-            event.setConfirmedRequest(test1
+            event.setConfirmedRequest(confirmedRequests
                     .getOrDefault(event.getId(), 0));
         }
     }
