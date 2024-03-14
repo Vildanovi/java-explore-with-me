@@ -244,7 +244,7 @@ public class EventsService {
     public List<Event> getEvents(List<Integer> users, List<StateEvent> states, List<Integer> categories,
                                         LocalDateTime rangeStart, LocalDateTime rangeEnd, int from, int size) {
         List<Event> events;
-        Pageable pageable = new OffsetBasedPageRequest(from, size, Constants.SORT_DESC_EVENTDATE);
+        Pageable pageable = new OffsetBasedPageRequest(from, size, Constants.SORT_DESC_ID);
 //        Pageable pageable = PageRequest.of(from / size, size, Constants.SORT_DESC_ID);
         BooleanBuilder searchParam = new BooleanBuilder();
 
@@ -380,12 +380,6 @@ public class EventsService {
         List<Integer> ids = events.stream()
                 .map(Event::getId)
                 .collect(Collectors.toList());
-        Map<Integer, Integer> hits = getHits(ids);
-
-        for (Event event : events) {
-            event.setViews(hits.getOrDefault(event.getId(), 0));
-        }
-
         Map<Integer, Integer> confirmedRequests = participationRequestRepository
                 .findByEventAndStartAndEnd(ids, RequestStatus.CONFIRMED)
                 .stream()
@@ -399,6 +393,11 @@ public class EventsService {
         for (Event event : events) {
             event.setConfirmedRequest(confirmedRequests
                     .getOrDefault(event.getId(), 0));
+        }
+        Map<Integer, Integer> hits = getHits(ids);
+
+        for (Event event : events) {
+            event.setViews(hits.getOrDefault(event.getId(), 0));
         }
     }
 
