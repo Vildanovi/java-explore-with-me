@@ -8,6 +8,7 @@ import ru.practicum.model.EndpointHit;
 import ru.practicum.model.ViewStats;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 
 @Repository
@@ -38,4 +39,27 @@ public interface HitRepository extends JpaRepository<EndpointHit, Long> {
     List<ViewStats> findUniqueByUrisAndStartAndEnd(@Param("start") LocalDateTime start,
                                                    @Param("end") LocalDateTime end,
                                                    @Param("uris") List<String> uris);
+
+    @Query(value =
+            "SELECT app AS app, uri AS uri, COUNT(ip) AS ip FROM EndpointHit" +
+                    " WHERE uri IN :uris AND (timestamp >= :start AND timestamp <= :end) GROUP BY app, uri"
+
+    )
+    List<ViewStats> findAllByUris(@Param("uris") List<String> uris,
+                                  @Param("start") LocalDateTime start,
+                                  @Param("end") LocalDateTime end);
+
+    @Query(value =
+            "SELECT app AS app, uri AS uri, COUNT(DISTINCT ip) AS ip FROM EndpointHit" +
+                    " WHERE uri IN :uris AND (timestamp >= :start AND timestamp < :end) GROUP BY app, uri"
+    )
+    List<ViewStats> findAllUnique(@Param("uris") List<String> uris,
+                                  @Param("start") LocalDateTime start,
+                                  @Param("end") LocalDateTime end);
+
+    @Query("SELECT new ru.practicum.model.ViewStats(v.app, v.uri, COUNT(DISTINCT v.ip)) " +
+            "FROM EndpointHit AS v WHERE v.uri IN :uris GROUP BY v.app, v.uri ORDER BY COUNT(DISTINCT v.ip) DESC")
+    List<ViewStats> queryDistinctByUriIn(@Param("uris") Collection<String> uris);
+
+
 }

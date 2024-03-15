@@ -6,8 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.EndPointHitDto;
-import ru.practicum.ViewStatsDto;
+import ru.practicum.stats.dto.EndPointHitDto;
+import ru.practicum.stats.dto.ViewStatsDto;
 import ru.practicum.constant.Constants;
 import ru.practicum.mapper.HitMapper;
 import ru.practicum.service.HitService;
@@ -36,12 +36,13 @@ public class StatsController {
     @Operation(summary = "Получение статистики по посещениям.")
     public List<ViewStatsDto> getStats(@RequestParam(name = "start") @DateTimeFormat(pattern = Constants.DATE_PATTERN) LocalDateTime start,
                                        @RequestParam(name = "end")  @DateTimeFormat(pattern = Constants.DATE_PATTERN) LocalDateTime end,
-                                       @RequestParam(name = "uris", required = false) List<String> uris,
+                                       @RequestParam(name = "uris") List<String> uris,
                                        @RequestParam(name = "unique", defaultValue = "false") Boolean unique) {
         log.debug("Получаем статистику для uris: {} start: {} end: {} unique: {}", uris, start, end, unique);
+
         return hitService.getStats(start, end, uris, unique)
-                .stream()
-                .map(HitMapper::mapStatsToViewStatsDto)
-                .collect(Collectors.toList());
+                    .stream()
+                    .map(HitMapper::mapStatsToViewStatsDto)
+                    .collect(Collectors.toList());
     }
 }

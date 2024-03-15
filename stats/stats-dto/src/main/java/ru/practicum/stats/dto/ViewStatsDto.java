@@ -1,4 +1,4 @@
-package ru.practicum;
+package ru.practicum.stats.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ViewStatsDto {
-
     @Schema(description = "Название сервиса",
             example = "ewm-main-service")
     private String app;

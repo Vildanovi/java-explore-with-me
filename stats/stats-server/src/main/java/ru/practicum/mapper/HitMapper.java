@@ -1,8 +1,8 @@
 package ru.practicum.mapper;
 
 import lombok.experimental.UtilityClass;
-import ru.practicum.EndPointHitDto;
-import ru.practicum.ViewStatsDto;
+import ru.practicum.stats.dto.EndPointHitDto;
+import ru.practicum.stats.dto.ViewStatsDto;
 import ru.practicum.model.EndpointHit;
 import ru.practicum.model.ViewStats;
 
