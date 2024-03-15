@@ -25,6 +25,7 @@ import java.util.List;
 public class StatClient {
 
     protected final RestTemplate restTemplate;
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     @Autowired
     public StatClient(@Value("${stats-server.url}") String serverUrl, RestTemplateBuilder restTemplateBuilder) {
@@ -44,8 +45,8 @@ public class StatClient {
         ParameterizedTypeReference<List<ViewStatsDto>> typeRef = new ParameterizedTypeReference<>() {
         };
         HashMap<String, Object> parameters = new HashMap<>();
-        parameters.put("start", start.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-        parameters.put("end", end.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        parameters.put("start", start.format(DATE_TIME_FORMATTER));
+        parameters.put("end", end.format(DATE_TIME_FORMATTER));
         parameters.put("uris", String.join(",", uris));
         parameters.put("unique", unique);
 

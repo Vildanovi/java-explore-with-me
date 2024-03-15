@@ -32,10 +32,6 @@ public class EventPublicController {
 
     private final EventsService eventsService;
     private final StatService statService;
-//    private final StatClient statClient;
-//
-//    @Value("${service-name}")
-//    private String application;
 
     @GetMapping
     @Operation(
@@ -80,14 +76,4 @@ public class EventPublicController {
         statService.createHit(request);
         return EventMapper.mapEventToEventFullDto(eventsService.getEventById(id));
     }
-
-//    private void createHit(HttpServletRequest request) {
-//        EndPointHitDto endpointHitRequestDto = EndPointHitDto.builder()
-//                .app(application)
-//                .ip(request.getRemoteAddr())
-//                .uri(request.getRequestURI())
-//                .timestamp(LocalDateTime.now())
-//                .build();
-//        statClient.createHit(endpointHitRequestDto);
-//    }
 }
