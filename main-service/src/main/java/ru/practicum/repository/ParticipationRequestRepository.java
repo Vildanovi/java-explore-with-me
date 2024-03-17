@@ -8,6 +8,7 @@ import ru.practicum.model.enumerations.RequestStatus;
 import ru.practicum.stats.dto.request.RequestConfirmedCountDto;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ParticipationRequestRepository extends JpaRepository<ParticipationRequest, Integer>, QuerydslPredicateExecutor<ParticipationRequest> {
 
@@ -23,6 +24,9 @@ public interface ParticipationRequestRepository extends JpaRepository<Participat
             "FROM ParticipationRequest AS pr " +
             "WHERE pr.event.id IN ?1 and pr.status = ?2 group by pr.event.id")
     List<RequestConfirmedCountDto> findByEventAndStartAndEnd(List<Integer> ids, RequestStatus status);
+
+    Optional<ParticipationRequest> findByEvent_IdAndRequester_Id(Integer eventId, Integer requestId);
+
 
     List<ParticipationRequest> findAllByRequesterIdAndEventId(Integer userId, Integer eventId);
 }
