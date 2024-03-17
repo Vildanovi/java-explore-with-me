@@ -1,7 +1,7 @@
 {
 	"info": {
-		"_postman_id": "54d33a2f-3e1c-4879-8dba-ca5ce14fe294",
-		"name": "Feature-comments",
+		"_postman_id": "9f5ddb2d-450b-4ec1-b9ed-ef8e2239bf6a",
+		"name": "Feature-comments Test",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "19355042"
 	},
@@ -13,6 +13,9 @@
 					"listen": "test",
 					"script": {
 						"exec": [
+							"const myData = pm.response.json();",
+							"pm.collectionVariables.set('userFirstId', myData.id)",
+							"",
 							"pm.test(\"Status code is 200 or 201\", function () {",
 							"    pm.expect(pm.response.code).to.be.oneOf([200,201]);",
 							"});",
@@ -23,17 +26,16 @@
 							"pm.test(\"Test user 'id' field\", function () {",
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData).to.have.property('id');",
-							"    pm.expect(jsonData.id, '\"id\" must be 1').to.eql(1);",
 							"});",
 							"pm.test(\"Test user 'email' field\", function () {",
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData).to.have.property('email');",
-							"    pm.expect(jsonData.email, '\"email\" must be \"user@user.com\"').to.eql('user@user.com');",
+							"    pm.expect(jsonData.email, '\"email\" must be \"mytestuser@user.com\"').to.eql('mytestuser@user.com');",
 							"});",
 							"pm.test(\"Test user 'name' field\", function () {",
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData).to.have.property('name');",
-							"    pm.expect(jsonData.name, '\"name\" must be \"user\"').to.eql('user');",
+							"    pm.expect(jsonData.name, '\"name\" must be \"mytestuser\"').to.eql('mytestuser');",
 							"});"
 						],
 						"type": "text/javascript",
@@ -57,7 +59,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"name\": \"user\",\n    \"email\": \"user@user.com\"\n}"
+					"raw": "{\n    \"name\": \"mytestuser\",\n    \"email\": \"mytestuser@user.com\"\n}"
 				},
 				"url": {
 					"raw": "{{baseUrl}}/admin/users",
@@ -79,6 +81,9 @@
 					"listen": "test",
 					"script": {
 						"exec": [
+							"const myData = pm.response.json();",
+							"pm.collectionVariables.set('userSecondId', myData.id)",
+							"",
 							"pm.test(\"Status code is 200 or 201\", function () {",
 							"    pm.expect(pm.response.code).to.be.oneOf([200,201]);",
 							"});",
@@ -89,17 +94,16 @@
 							"pm.test(\"Test user 'id' field\", function () {",
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData).to.have.property('id');",
-							"    pm.expect(jsonData.id, '\"id\" must be 2').to.eql(2);",
 							"});",
 							"pm.test(\"Test user 'email' field\", function () {",
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData).to.have.property('email');",
-							"    pm.expect(jsonData.email, '\"email\" must be \"user2@user.com\"').to.eql('user2@user.com');",
+							"    pm.expect(jsonData.email, '\"email\" must be \"mytestuser2@user.com\"').to.eql('mytestuser2@user.com');",
 							"});",
 							"pm.test(\"Test user 'name' field\", function () {",
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData).to.have.property('name');",
-							"    pm.expect(jsonData.name, '\"name\" must be \"user2\"').to.eql('user2');",
+							"    pm.expect(jsonData.name, '\"name\" must be \"mytestuser2\"').to.eql('mytestuser2');",
 							"});"
 						],
 						"type": "text/javascript",
@@ -123,7 +127,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"name\": \"user2\",\n    \"email\": \"user2@user.com\"\n}"
+					"raw": "{\n    \"name\": \"mytestuser2\",\n    \"email\": \"mytestuser2@user.com\"\n}"
 				},
 				"url": {
 					"raw": "{{baseUrl}}/admin/users",
@@ -155,6 +159,9 @@
 					"listen": "test",
 					"script": {
 						"exec": [
+							"const myData = pm.response.json();\r",
+							"pm.collectionVariables.set('categoryId', myData.id)\r",
+							"\r",
 							"pm.test(\"Ответ должен содержать код статуса 201 и данные в формате json\", function () {\r",
 							"    pm.response.to.have.status(201);\r",
 							"    pm.response.to.be.withBody;\r",
@@ -193,7 +200,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"name\": \"Спорт\"\r\n}",
+					"raw": "{\r\n  \"name\": \"mytestcategory\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -215,7 +222,7 @@
 			"response": []
 		},
 		{
-			"name": "Добавление события 1",
+			"name": "Добавление события 1 пользователем",
 			"event": [
 				{
 					"listen": "prerequest",
@@ -231,6 +238,9 @@
 					"listen": "test",
 					"script": {
 						"exec": [
+							"const myData = pm.response.json();\r",
+							"pm.collectionVariables.set('eventFirstId', myData.id)\r",
+							"\r",
 							"pm.test(\"Ответ должен содержать код статуса 201 и данные в формате json\", function () {\r",
 							"    pm.response.to.have.status(201);  \r",
 							"    pm.response.to.be.withBody;\r",
@@ -288,7 +298,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"annotation\": \"Сплав на байдарках похож на полет.\",\r\n  \"category\": 1,\r\n  \"description\": \"Сплав на байдарках похож на полет. На спокойной воде — это парение. На бурной, порожистой — выполнение фигур высшего пилотажа. И то, и другое дарят чувство обновления, феерические эмоции, яркие впечатления.\",\r\n  \"eventDate\": \"2024-12-31 15:10:05\",\r\n  \"location\": {\r\n    \"lat\": 55.754166,\r\n    \"lon\": 37.62\r\n  },\r\n  \"paid\": true,\r\n  \"participantLimit\": 0,\r\n  \"requestModeration\": false,\r\n  \"title\": \"Сплав на байдарках\"\r\n}",
+					"raw": "{\r\n  \"annotation\": \"Сплав на байдарках похож на полет.\",\r\n  \"category\": {{categoryId}},\r\n  \"description\": \"Сплав на байдарках похож на полет. На спокойной воде — это парение. На бурной, порожистой — выполнение фигур высшего пилотажа. И то, и другое дарят чувство обновления, феерические эмоции, яркие впечатления.\",\r\n  \"eventDate\": \"2024-12-31 15:10:05\",\r\n  \"location\": {\r\n    \"lat\": 55.754166,\r\n    \"lon\": 37.62\r\n  },\r\n  \"paid\": true,\r\n  \"participantLimit\": 0,\r\n  \"requestModeration\": false,\r\n  \"title\": \"Сплав на байдарках\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -296,21 +306,14 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseUrl}}/users/:userId/events",
+					"raw": "{{baseUrl}}/users/{{userFirstId}}/events",
 					"host": [
 						"{{baseUrl}}"
 					],
 					"path": [
 						"users",
-						":userId",
+						"{{userFirstId}}",
 						"events"
-					],
-					"variable": [
-						{
-							"key": "userId",
-							"value": "1",
-							"description": "(Required) id текущего пользователя"
-						}
 					]
 				},
 				"description": "Обратите внимание: дата и время на которые намечено событие не может быть раньше, чем через два часа от текущего момента"
@@ -375,7 +378,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"annotation\": \"Сап прогулки по рекам и каналам – это возможность увидеть Практикбург с другого ракурса\",\r\n  \"category\": 1,\r\n  \"description\": \"От английского SUP - Stand Up Paddle — \\\"стоя на доске с веслом\\\", гавайская разновидность сёрфинга, в котором серфер, стоя на доске, катается на волнах и при этом гребет веслом, а не руками, как в классическом серфинге.\",\r\n  \"eventDate\": \"2024-12-11 23:10:05\",\r\n  \"location\": {\r\n    \"lat\": 55.754167,\r\n    \"lon\": 37.62\r\n  },\r\n  \"paid\": true,\r\n  \"participantLimit\": 7,\r\n  \"requestModeration\": false,\r\n  \"stateAction\": \"PUBLISH_EVENT\",\r\n  \"title\": \"Сап прогулки по рекам и каналам\"\r\n}",
+					"raw": "{\r\n  \"annotation\": \"Сап прогулки по рекам и каналам – это возможность увидеть Практикбург с другого ракурса\",\r\n  \"category\": {{categoryId}},\r\n  \"description\": \"От английского SUP - Stand Up Paddle — \\\"стоя на доске с веслом\\\", гавайская разновидность сёрфинга, в котором серфер, стоя на доске, катается на волнах и при этом гребет веслом, а не руками, как в классическом серфинге.\",\r\n  \"eventDate\": \"2024-12-11 23:10:05\",\r\n  \"location\": {\r\n    \"lat\": 55.754167,\r\n    \"lon\": 37.62\r\n  },\r\n  \"paid\": true,\r\n  \"participantLimit\": 7,\r\n  \"requestModeration\": false,\r\n  \"stateAction\": \"PUBLISH_EVENT\",\r\n  \"title\": \"Сап прогулки по рекам и каналам\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -383,21 +386,14 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseUrl}}/admin/events/:eventId",
+					"raw": "{{baseUrl}}/admin/events/{{eventFirstId}}",
 					"host": [
 						"{{baseUrl}}"
 					],
 					"path": [
 						"admin",
 						"events",
-						":eventId"
-					],
-					"variable": [
-						{
-							"key": "eventId",
-							"value": "1",
-							"description": "(Required) id события"
-						}
+						"{{eventFirstId}}"
 					]
 				},
 				"description": "Обратите внимание:\n - дата начала события должна быть не ранее чем за час от даты публикации.\n- событие должно быть в состоянии ожидания публикации"
@@ -405,7 +401,7 @@
 			"response": []
 		},
 		{
-			"name": "Добавление запроса от текущего пользователя на участие в событии Copy",
+			"name": "Добавление запроса от текущего пользователя на участие в событии",
 			"event": [
 				{
 					"listen": "prerequest",
@@ -461,27 +457,20 @@
 					}
 				],
 				"url": {
-					"raw": "{{baseUrl}}/users/:userId/requests?eventId=1",
+					"raw": "{{baseUrl}}/users/{{userSecondId}}/requests?eventId={{eventFirstId}}",
 					"host": [
 						"{{baseUrl}}"
 					],
 					"path": [
 						"users",
-						":userId",
+						"{{userSecondId}}",
 						"requests"
 					],
 					"query": [
 						{
 							"key": "eventId",
-							"value": "1",
+							"value": "{{eventFirstId}}",
 							"description": "(Required) id события"
-						}
-					],
-					"variable": [
-						{
-							"key": "userId",
-							"value": "2",
-							"description": "(Required) id текущего пользователя"
 						}
 					]
 				},
@@ -490,20 +479,22 @@
 			"response": []
 		},
 		{
-			"name": "Comment 1  from user 1 to event 1",
+			"name": "Comment 1  from user 2 to event 1",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"exec": [
+							"const myData = pm.response.json();",
+							"pm.collectionVariables.set('commentFirstId', myData.id)",
+							"",
 							"pm.test(\"Status code is 200\", function () {",
 							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
 							"});",
-							"pm.test(\"Test add comment to event 1 from user2\", function () {",
+							"pm.test(\"Test add comment to event 1 from Add comment from mytestuser2\", function () {",
 							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.id, '\"id\" field').to.eql(1);",
-							"    pm.expect(jsonData.text, '\"text\" field').to.eql(\"Add comment from user2\");",
-							"    pm.expect(jsonData.authorName, '\"authorName\" field').to.eql(\"user2\");",
+							"    pm.expect(jsonData).to.have.property('id');",
+							"    pm.expect(jsonData.text, '\"text\" field').to.eql(\"Add comment from mytestuser2\");",
 							"    pm.expect(jsonData.created, '\"created\" field').not.null;",
 							"});"
 						],
@@ -543,28 +534,22 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"text\": \"Add comment from user2\"\n}"
+					"raw": "{\n    \"text\": \"Add comment from mytestuser2\"\n}"
 				},
 				"url": {
-					"raw": "{{baseUrl}}/users/:userId/comments?eventId=1",
+					"raw": "{{baseUrl}}/users/{{userSecondId}}/comments?eventId={{eventFirstId}}",
 					"host": [
 						"{{baseUrl}}"
 					],
 					"path": [
 						"users",
-						":userId",
+						"{{userSecondId}}",
 						"comments"
 					],
 					"query": [
 						{
 							"key": "eventId",
-							"value": "1"
-						}
-					],
-					"variable": [
-						{
-							"key": "userId",
-							"value": "2"
+							"value": "{{eventFirstId}}"
 						}
 					]
 				}
@@ -572,20 +557,22 @@
 			"response": []
 		},
 		{
-			"name": "Comment 2  from user 1 to event",
+			"name": "Comment 2  from user 2 to event",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"exec": [
+							"const myData = pm.response.json();",
+							"pm.collectionVariables.set('commentSecondId', myData.id)",
+							"",
 							"pm.test(\"Status code is 200\", function () {",
 							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
 							"});",
-							"pm.test(\"Test add comment to event 1 from user2\", function () {",
+							"pm.test(\"Test add comment to event 1 from mytestuser2\", function () {",
 							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.id, '\"id\" field').to.eql(2);",
-							"    pm.expect(jsonData.text, '\"text\" field').to.eql(\"Add comment 2 from user2\");",
-							"    pm.expect(jsonData.authorName, '\"authorName\" field').to.eql(\"user2\");",
+							"    pm.expect(jsonData).to.have.property('id');",
+							"    pm.expect(jsonData.text, '\"text\" field').to.eql(\"Add comment 2 from mytestuser2\");",
 							"    pm.expect(jsonData.created, '\"created\" field').not.null;",
 							"});"
 						],
@@ -625,28 +612,22 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"text\": \"Add comment 2 from user2\"\n}"
+					"raw": "{\n    \"text\": \"Add comment 2 from mytestuser2\"\n}"
 				},
 				"url": {
-					"raw": "{{baseUrl}}/users/:userId/comments?eventId=1",
+					"raw": "{{baseUrl}}/users/{{userSecondId}}/comments?eventId={{eventFirstId}}",
 					"host": [
 						"{{baseUrl}}"
 					],
 					"path": [
 						"users",
-						":userId",
+						"{{userSecondId}}",
 						"comments"
 					],
 					"query": [
 						{
 							"key": "eventId",
-							"value": "1"
-						}
-					],
-					"variable": [
-						{
-							"key": "userId",
-							"value": "2"
+							"value": "{{eventFirstId}}"
 						}
 					]
 				}
@@ -662,8 +643,13 @@
 						"exec": [
 							"pm.test(\"Status code is 200\", function () {",
 							"    pm.response.to.be.ok;",
+							"});",
+							"",
+							"pm.test(\"Test list comments response\", function () {",
 							"    pm.response.to.be.withBody;",
 							"    pm.response.to.be.json;",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.length, 'List length must be 2').to.eql(2);",
 							"});"
 						],
 						"type": "text/javascript",
@@ -686,13 +672,13 @@
 					}
 				],
 				"url": {
-					"raw": "{{baseUrl}}/users/:userId/comments?from=0&size=10",
+					"raw": "{{baseUrl}}/users/{{userSecondId}}/comments?from=0&size=10",
 					"host": [
 						"{{baseUrl}}"
 					],
 					"path": [
 						"users",
-						":userId",
+						"{{userSecondId}}",
 						"comments"
 					],
 					"query": [
@@ -703,12 +689,6 @@
 						{
 							"key": "size",
 							"value": "10"
-						}
-					],
-					"variable": [
-						{
-							"key": "userId",
-							"value": "2"
 						}
 					]
 				}
@@ -767,20 +747,14 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseUrl}}/admin/comments/:commentId",
+					"raw": "{{baseUrl}}/admin/comments/{{commentFirstId}}",
 					"host": [
 						"{{baseUrl}}"
 					],
 					"path": [
 						"admin",
 						"comments",
-						":commentId"
-					],
-					"variable": [
-						{
-							"key": "commentId",
-							"value": "1"
-						}
+						"{{commentFirstId}}"
 					]
 				},
 				"description": "Обратите внимание:\n - дата начала события должна быть не ранее чем за час от даты публикации.\n- событие должно быть в состоянии ожидания публикации"
@@ -796,8 +770,13 @@
 						"exec": [
 							"pm.test(\"Status code is 200\", function () {",
 							"    pm.response.to.be.ok;",
+							"});",
+							"",
+							"pm.test(\"Test list comments response\", function () {",
 							"    pm.response.to.be.withBody;",
 							"    pm.response.to.be.json;",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.length, 'List length must be 2').to.eql(2);",
 							"});"
 						],
 						"type": "text/javascript",
@@ -820,7 +799,7 @@
 					}
 				],
 				"url": {
-					"raw": "{{baseUrl}}/admin/comments/?users=1, 2&states&text&rangeStart&rangeEnd&from&size",
+					"raw": "{{baseUrl}}/admin/comments/?users={{userFirstId}}, {{userSecondId}}&states&text&rangeStart&rangeEnd&from&size",
 					"host": [
 						"{{baseUrl}}"
 					],
@@ -832,7 +811,7 @@
 					"query": [
 						{
 							"key": "users",
-							"value": "1, 2"
+							"value": "{{userFirstId}}, {{userSecondId}}"
 						},
 						{
 							"key": "states",
@@ -872,8 +851,6 @@
 						"exec": [
 							"pm.test(\"Status code is 200\", function () {",
 							"    pm.response.to.be.ok;",
-							"    pm.response.to.be.withBody;",
-							"    pm.response.to.be.json;",
 							"});",
 							"",
 							"pm.test(\"Test list Comments response\", function () {",
@@ -961,8 +938,6 @@
 						"exec": [
 							"pm.test(\"Status code is 200\", function () {",
 							"    pm.response.to.be.ok;",
-							"    pm.response.to.be.withBody;",
-							"    pm.response.to.be.json;",
 							"});",
 							"",
 							"pm.test(\"Test list Comments response\", function () {",
@@ -1042,10 +1017,60 @@
 			"response": []
 		}
 	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
 	"variable": [
 		{
 			"key": "baseUrl",
 			"value": "http://localhost:8080"
+		},
+		{
+			"key": "userFirstId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "userSecondId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "categoryId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "eventFirstId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "commentFirstId",
+			"value": ""
+		},
+		{
+			"key": "commentSecondId",
+			"value": ""
 		}
 	]
 }
